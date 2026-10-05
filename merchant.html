@@ -176,10 +176,12 @@
                     const walletBalance = data.balance !== undefined ? data.balance : (data.walletBalance || 0);
 
                     // Determine status badge styling
-                    const isOnline = data.status === "online" || data.active === true;
+                    const statusVal = (data.status || "ACTIVE").toUpperCase();
+                    const isOnline = statusVal === "ACTIVE" || statusVal === "ONLINE" || statusVal === "TRUE";
+                    
                     const statusBadge = isOnline 
-                        ? `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Online</span>`
-                        : `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Offline</span>`;
+                        ? `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${statusVal}</span>`
+                        : `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">${statusVal}</span>`;
 
                     rowsHTML += `
                         <tr class="hover:bg-slate-800/50 transition">
