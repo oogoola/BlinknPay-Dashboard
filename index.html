@@ -98,11 +98,11 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-sm text-slate-400">Total Active Merchants</p>
-                            <h3 class="text-3xl font-bold mt-2" id="metric-merchant-count">1,248</h3>
+                            <h3 class="text-3xl font-bold mt-2" id="metric-merchant-count">--</h3>
                         </div>
                         <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl"><i data-lucide="store" class="w-6 h-6"></i></div>
                     </div>
-                    <span class="text-xs text-emerald-400 font-medium mt-4 inline-block">+12% from last month</span>
+                    <span class="text-xs text-emerald-400 font-medium mt-4 inline-block">Live Firestore Feed</span>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
                     <div class="flex justify-between items-start">
@@ -118,11 +118,11 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-sm text-slate-400">Aggregate Wallet Liquidity</p>
-                            <h3 class="text-3xl font-bold mt-2">KES 4.82M</h3>
+                            <h3 class="text-3xl font-bold mt-2" id="metric-total-liquidity">KES 0</h3>
                         </div>
                         <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl"><i data-lucide="wallet" class="w-6 h-6"></i></div>
                     </div>
-                    <span class="text-xs text-emerald-400 font-medium mt-4 inline-block">Balanced across channels</span>
+                    <span class="text-xs text-emerald-400 font-medium mt-4 inline-block">Sum across merchant nodes</span>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
                     <div class="flex justify-between items-start">
@@ -159,7 +159,6 @@
                             </tr>
                         </thead>
                         <tbody id="merchant-table-body" class="divide-y divide-slate-800 text-sm">
-                            <!-- Live Firestore records stream here dynamically -->
                             <tr>
                                 <td colspan="5" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore...</td>
                             </tr>
@@ -172,9 +171,6 @@
 
     <!-- Firebase Connection & Real-Time Sync Script -->
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-
         // Live Firebase Web Configuration Credentials
         const firebaseConfig = {
             apiKey: "AIzaSyBuUTCdsv83R8EgSSLUKTiWhCMpiJuRjto",
@@ -201,19 +197,39 @@
                 allMerchantsData.push({ id: doc.id, ...doc.data() });
             });
 
-            renderMerchantTable(allMerchantsData);
+            // Sort merchants by date (newest first)
+            allMerchantsData.sort((a, b) => {
+                const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || a.timestamp || 0);
+                const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || b.timestamp || 0);
+                return dateB - dateA; // Descending order (latest formed first)
+            });
 
-            // Dynamically update the metric card counter if data is available
-            const countEl = document.getElementById("metric-merchant-count");
-            if (countEl) {
-                countEl.textContent = allMerchantsData.length > 0 ? allMerchantsData.length.toLocaleString() : "1,248";
-            }
+            renderMerchantTable(allMerchantsData);
+            updateDashboardMetrics(allMerchantsData);
         }, (error) => {
             console.error("Firestore sync error:", error);
             document.getElementById("merchant-table-body").innerHTML = `
-                <tr><td colspan="5" class="p-8 text-center text-red-400">Failed to sync with Firebase. Check your project configuration rules.</td></tr>
+                <tr><td colspan="5" class="p-8 text-center text-rose-400">Failed to sync with Firebase. Check your project configuration rules.</td></tr>
             `;
         });
+
+        function updateDashboardMetrics(dataArray) {
+            const countEl = document.getElementById("metric-merchant-count");
+            if (countEl) {
+                countEl.textContent = dataArray.length.toLocaleString();
+            }
+
+            let totalLiquidity = 0;
+            dataArray.forEach(item => {
+                const bal = item.balance !== undefined ? item.balance : (item.walletBalance || 0);
+                totalLiquidity += Number(bal) || 0;
+            });
+
+            const liquidityEl = document.getElementById("metric-total-liquidity");
+            if (liquidityEl) {
+                liquidityEl.textContent = `KES ${totalLiquidity.toLocaleString()}`;
+            }
+        }
 
         function renderMerchantTable(dataArray) {
             let rowsHTML = "";
@@ -221,23 +237,30 @@
             if (dataArray.length === 0) {
                 rowsHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-500">No registered merchants found in Firestore.</td></tr>`;
             } else {
-                dataArray.forEach((data) => {
+                dataArray.forEach((data, index) => {
                     const displayName = data.businessName || data.name || 'Unnamed Merchant';
-                    const initialLetter = displayName.charAt(0).toUpperCase();
-                    const identifierCode = data.merchantCode || data.identifier || 'MER_NBI_0000';
+                    const rowNumber = index + 1; // Sequential numbering starting from 1 for the newest
+                    const identifierCode = data.merchantCode || data.identifier || data.terminalId || 'MER_NBI_0000';
                     const activeChannel = data.activeChannel || "Quad-Channel Engine";
                     const walletBalance = data.balance !== undefined ? data.balance : (data.walletBalance || 0);
+
+                    // Parse formation date for secondary info display if desired
+                    let rawDate = data.createdAt?.toDate ? data.createdAt.toDate() : (data.createdAt ? new Date(data.createdAt) : null);
+                    const formattedDate = rawDate && !isNaN(rawDate) ? rawDate.toLocaleDateString() : 'N/A';
                     
                     rowsHTML += `
                         <tr class="hover:bg-slate-800/50 transition">
                             <td class="p-4 font-medium flex items-center space-x-3">
-                                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">
-                                    ${initialLetter}
+                                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center text-xs">
+                                    ${rowNumber}
                                 </div>
-                                <span class="text-white">${displayName}</span>
+                                <div>
+                                    <span class="text-white block">${displayName}</span>
+                                    <span class="text-[10px] text-slate-500">Formed: ${formattedDate}</span>
+                                </div>
                             </td>
                             <td class="p-4 text-slate-400 font-mono text-xs">${identifierCode}</td>
-                            <td class="p-4 text-slate-300">Lat: ${data.lat || '0.00'}, Lng: ${data.lng || '0.00'}</td>
+                            <td class="p-4 text-slate-300 font-mono text-xs">Lat: ${data.lat || '0.00'}, Lng: ${data.lng || '0.00'}</td>
                             <td class="p-4">
                                 <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                                     ${activeChannel}
@@ -261,12 +284,17 @@
                 const query = e.target.value.toLowerCase();
                 const filtered = allMerchantsData.filter(item => {
                     const name = (item.businessName || item.name || "").toLowerCase();
-                    const identifier = (item.merchantCode || item.identifier || "").toLowerCase();
+                    const identifier = (item.merchantCode || item.identifier || item.terminalId || "").toLowerCase();
                     return name.includes(query) || identifier.includes(query);
                 });
                 renderMerchantTable(filtered);
             });
         }
+
+        // Initialize Lucide icons after DOM content is loaded
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
     </script>
 </body>
 </html>
