@@ -97,6 +97,13 @@
                 allMerchantsData.push({ id: doc.id, ...doc.data() });
             });
 
+            // Sort merchants by date (newest first)
+            allMerchantsData.sort((a, b) => {
+                const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || a.timestamp || 0);
+                const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || b.timestamp || 0);
+                return dateB - dateA; // Descending order (latest formed first)
+            });
+
             renderMerchantTable(allMerchantsData);
         }, (error) => {
             console.error("Error listening to merchants collection:", error);
@@ -111,12 +118,16 @@
             if (dataArray.length === 0) {
                 rowsHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-500">No merchant documents found in Firestore.</td></tr>`;
             } else {
-                dataArray.forEach((data) => {
+                dataArray.forEach((data, index) => {
                     const displayName = data.businessName || data.name || 'Unnamed Merchant';
-                    const initialLetter = displayName.charAt(0).toUpperCase();
+                    const rowNumber = index + 1; // Sequential numbering starting from 1 for the newest
                     const identifierCode = data.merchantCode || data.identifier || data.terminalId || 'MER_NBI_0000';
                     const activeChannel = data.activeChannel || "Quad-Channel Engine";
                     const walletBalance = data.balance !== undefined ? data.balance : (data.walletBalance || 0);
+
+                    // Parse and format formation date
+                    let rawDate = data.createdAt?.toDate ? data.createdAt.toDate() : (data.createdAt ? new Date(data.createdAt) : null);
+                    const formattedDate = rawDate && !isNaN(rawDate) ? rawDate.toLocaleDateString() : 'N/A';
 
                     // Determine status badge styling
                     const statusVal = (data.status || "ACTIVE").toUpperCase();
@@ -129,10 +140,13 @@
                     rowsHTML += `
                         <tr class="hover:bg-slate-800/50 transition">
                             <td class="p-4 font-medium flex items-center space-x-3">
-                                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">
-                                    ${initialLetter}
+                                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center text-xs">
+                                    ${rowNumber}
                                 </div>
-                                <span class="text-white">${displayName}</span>
+                                <div>
+                                    <span class="text-white block">${displayName}</span>
+                                    <span class="text-[10px] text-slate-500">Formed: ${formattedDate}</span>
+                                </div>
                             </td>
                             <td class="p-4 text-slate-400 font-mono text-xs">${identifierCode}</td>
                             <td class="p-4 text-slate-300 font-mono text-xs">Lat: ${data.lat || '0.00'}, Lng: ${data.lng || '0.00'}</td>
