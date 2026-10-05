@@ -30,10 +30,10 @@
                     <i data-lucide="store" class="w-5 h-5"></i>
                     <span>Merchants</span>
                 </a>
-               <a href="customer.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
-    <i data-lucide="users" class="w-5 h-5"></i>
-    <span>Customers</span>
-</a>
+                <a href="customer.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>Customers</span>
+                </a>
                 <a href="rpids.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
                     <i data-lucide="radio" class="w-5 h-5"></i>
                     <span>Quad-Channel RPIDs</span>
@@ -42,38 +42,25 @@
                     <i data-lucide="wallet" class="w-5 h-5"></i>
                     <span>Wallet Ledgers</span>
                 </a>
-
                 <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
-    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
-    <span>Analytics</span>
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                    <span>Analytics</span>
                 </a>
-
-
-<!-- Link to Hardware Nodes Page -->
-<a href="node.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
-    <i data-lucide="cpu" class="w-5 h-5"></i>
-    <span>Hardware Nodes</span>
-</a>
-
-<!-- Link to Disputes Page -->
-<a href="disputes.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
-    <i data-lucide="alert-triangle" class="w-5 h-5"></i>
-    <span>Disputes</span>
-</a>
-
-<!-- Link to Settings Page -->
-<a href="settings.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
-    <i data-lucide="settings" class="w-5 h-5"></i>
-    <span>Settings</span>
-</a>
-
-
-
-
-
-
-
-                
+                <!-- Link to Hardware Nodes Page -->
+                <a href="node.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="cpu" class="w-5 h-5"></i>
+                    <span>Hardware Nodes</span>
+                </a>
+                <!-- Link to Disputes Page -->
+                <a href="disputes.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                    <span>Disputes</span>
+                </a>
+                <!-- Link to Settings Page -->
+                <a href="settings.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span>Settings</span>
+                </a>
             </nav>
         </div>
         <div class="p-6 border-t border-slate-800">
@@ -188,14 +175,16 @@
         // Initialize Lucide icons
         lucide.createIcons();
 
-        // Replace with your actual Firebase project configuration credentials
+        // Live Firebase Web Configuration Credentials
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyBuUTCdsv83R8EgSSLUKTiWhCMpiJuRjto",
+            authDomain: "blinknpay.firebaseapp.com",
+            databaseURL: "https://blinknpay-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "blinknpay",
+            storageBucket: "blinknpay.appspot.com",
+            messagingSenderId: "358623370620",
+            appId: "1:358623370620:web:9951ca49e4fdbcc66318f9",
+            measurementId: "G-8GGMZB1T04"
         };
 
         if (!firebase.apps.length) {
@@ -233,8 +222,11 @@
                 rowsHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-500">No registered merchants found in Firestore.</td></tr>`;
             } else {
                 dataArray.forEach((data) => {
-                    const initialLetter = data.name ? data.name.charAt(0).toUpperCase() : 'M';
-                    const activeChannel = data.activeChannel || "BLE + Ultrasound";
+                    const displayName = data.businessName || data.name || 'Unnamed Merchant';
+                    const initialLetter = displayName.charAt(0).toUpperCase();
+                    const identifierCode = data.merchantCode || data.identifier || 'MER_NBI_0000';
+                    const activeChannel = data.activeChannel || "Quad-Channel Engine";
+                    const walletBalance = data.balance !== undefined ? data.balance : (data.walletBalance || 0);
                     
                     rowsHTML += `
                         <tr class="hover:bg-slate-800/50 transition">
@@ -242,9 +234,9 @@
                                 <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">
                                     ${initialLetter}
                                 </div>
-                                <span class="text-white">${data.name || 'Unnamed Merchant'}</span>
+                                <span class="text-white">${displayName}</span>
                             </td>
-                            <td class="p-4 text-slate-400 font-mono text-xs">${data.identifier || 'MER_NBI_0000'}</td>
+                            <td class="p-4 text-slate-400 font-mono text-xs">${identifierCode}</td>
                             <td class="p-4 text-slate-300">Lat: ${data.lat || '0.00'}, Lng: ${data.lng || '0.00'}</td>
                             <td class="p-4">
                                 <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
@@ -252,7 +244,7 @@
                                 </span>
                             </td>
                             <td class="p-4 text-right font-mono font-semibold text-emerald-400">
-                                KES ${(data.walletBalance || 0).toLocaleString()}
+                                KES ${walletBalance.toLocaleString()}
                             </td>
                         </tr>
                     `;
@@ -268,8 +260,8 @@
             searchInput.addEventListener("input", (e) => {
                 const query = e.target.value.toLowerCase();
                 const filtered = allMerchantsData.filter(item => {
-                    const name = (item.name || "").toLowerCase();
-                    const identifier = (item.identifier || "").toLowerCase();
+                    const name = (item.businessName || item.name || "").toLowerCase();
+                    const identifier = (item.merchantCode || item.identifier || "").toLowerCase();
                     return name.includes(query) || identifier.includes(query);
                 });
                 renderMerchantTable(filtered);
