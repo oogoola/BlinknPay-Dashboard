@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlinknPay - Customer Analytics & Sessions</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-lg text-white shadow-lg shadow-indigo-500/30">BP</div>
+                <div>
+                    <h1 class="font-bold tracking-tight">BlinknPay</h1>
+                    <p class="text-xs text-slate-400">Customer Command Center</p>
+                </div>
+            </div>
+            <nav class="space-y-1">
+                <a href="index.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition text-sm font-medium">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="merchant.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition text-sm font-medium">
+                    <i data-lucide="store" class="w-4 h-4"></i>
+                    <span>Merchants</span>
+                </a>
+                <a href="customer.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 text-indigo-400 font-medium text-sm border border-indigo-500/20">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>Customers</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800 text-xs text-slate-500 flex items-center justify-between">
+            <span>Firebase Sync Active</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <!-- Top Header -->
+        <header class="h-16 border-b border-slate-800 bg-slate-900/50 backdrop-blur px-8 flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-slate-200">Registered Customer Analytics & Sessions</h2>
+            <div class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                Live Firestore Stream
+            </div>
+        </header>
+
+        <!-- Content Body -->
+        <div class="p-8 max-w-7xl w-full mx-auto space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-semibold text-slate-200">Active Customer Directories</h3>
+                        <p class="text-xs text-slate-400">Tracking transaction rates, proximity session tokens, and account metrics</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-xs uppercase tracking-wider text-slate-400 bg-slate-950/40">
+                                <th class="p-4 font-medium">Customer Name / ID</th>
+                                <th class="p-4 font-medium">Registered Device / RPID</th>
+                                <th class="p-4 font-medium">Session Status</th>
+                                <th class="p-4 font-medium">Transaction Rate</th>
+                                <th class="p-4 font-medium text-right">Wallet Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customer-table-body" class="divide-y divide-slate-800 text-sm">
+                            <tr>
+                                <td colspan="5" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore customer stream...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Your Firebase project configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Real-time listener for the 'customers' collection
+        db.collection("customers").onSnapshot((snapshot) => {
+            let rowsHTML = "";
+
+            if (snapshot.empty) {
+                document.getElementById("customer-table-body").innerHTML = `
+                    <tr><td colspan="5" class="p-8 text-center text-slate-500">No customer records found in Firestore.</td></tr>
+                `;
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                
+                // Determine session state styling
+                const isSessionActive = data.sessionStatus === "active" || data.online;
+                const sessionBadge = isSessionActive
+                    ? `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active Session</span>`
+                    : `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700">Idle</span>`;
+
+                rowsHTML += `
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="p-4 font-medium text-slate-200">
+                            <div>${data.name || "Anonymous User"}</div>
+                            <div class="text-xs text-slate-500 font-mono">${data.email || data.phoneNumber || "N/A"}</div>
+                        </td>
+                        <td class="p-4 text-slate-400 font-mono text-xs">${data.deviceIdentifier || data.rpidToken || "RPID_GEN_00x"}</td>
+                        <td class="p-4">${sessionBadge}</td>
+                        <td class="p-4 text-slate-300 font-mono text-xs">
+                            <span class="text-indigo-400 font-semibold">${data.txRate || "2.4"} tx/min</span> 
+                            <span class="text-slate-500">(${data.totalTxCount || 0} total)</span>
+                        </td>
+                        <td class="p-4 text-right font-mono font-semibold text-emerald-400">
+                            KES ${(data.walletBalance || 0).toLocaleString()}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("customer-table-body").innerHTML = rowsHTML;
+        }, (error) => {
+            console.error("Error listening to customers collection:", error);
+            document.getElementById("customer-table-body").innerHTML = `
+                <tr><td colspan="5" class="p-8 text-center text-rose-500">Error connecting to Firestore. Check your credentials.</td></tr>
+            `;
+        });
+    </script>
+</body>
+</html>
