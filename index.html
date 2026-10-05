@@ -8,6 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Firebase App & Firestore SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex">
 
@@ -19,23 +22,23 @@
                 <span class="text-xl font-bold tracking-wide bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">BlinknPay</span>
             </div>
             <nav class="space-y-1">
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 bg-indigo-600/10 text-indigo-400 rounded-xl font-medium border border-indigo-500/20">
+                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 bg-indigo-600/10 text-indigo-400 rounded-xl font-medium border border-indigo-500/20">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                     <span>Overview</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
+                <a href="merchant.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
                     <i data-lucide="store" class="w-5 h-5"></i>
                     <span>Merchants</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
+                <a href="customers.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
                     <i data-lucide="users" class="w-5 h-5"></i>
                     <span>Customers</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
+                <a href="rpids.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
                     <i data-lucide="radio" class="w-5 h-5"></i>
                     <span>Quad-Channel RPIDs</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
+                <a href="wallets.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
                     <i data-lucide="wallet" class="w-5 h-5"></i>
                     <span>Wallet Ledgers</span>
                 </a>
@@ -76,7 +79,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-sm text-slate-400">Total Active Merchants</p>
-                            <h3 class="text-3xl font-bold mt-2">1,248</h3>
+                            <h3 class="text-3xl font-bold mt-2" id="metric-merchant-count">1,248</h3>
                         </div>
                         <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl"><i data-lucide="store" class="w-6 h-6"></i></div>
                     </div>
@@ -122,7 +125,7 @@
                         <p class="text-xs text-slate-400">Live feed tracking merchant identifiers, coordinates, and real-time wallet amounts</p>
                     </div>
                     <div class="flex items-center space-x-3">
-                        <input type="text" placeholder="Search merchant name or ID..." class="bg-slate-950 border border-slate-800 text-sm rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500 text-slate-200 placeholder-slate-500 w-64">
+                        <input type="text" id="merchant-search-input" placeholder="Search merchant name or ID..." class="bg-slate-950 border border-slate-800 text-sm rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500 text-slate-200 placeholder-slate-500 w-64">
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -136,36 +139,10 @@
                                 <th class="p-4 font-semibold text-right">Wallet Balance</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800 text-sm">
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="p-4 font-medium flex items-center space-x-3">
-                                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">N</div>
-                                    <span>Nairobi CBD Java Station</span>
-                                </td>
-                                <td class="p-4 text-slate-400 font-mono text-xs">MER_NBI_00184</td>
-                                <td class="p-4 text-slate-300">Lat: -1.2863, Lng: 36.8172</td>
-                                <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">BLE + Ultrasound</span></td>
-                                <td class="p-4 text-right font-mono font-semibold text-emerald-400">KES 142,500</td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="p-4 font-medium flex items-center space-x-3">
-                                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">W</div>
-                                    <span>Westlands QuickMart Hub</span>
-                                </td>
-                                <td class="p-4 text-slate-400 font-mono text-xs">MER_NBI_00291</td>
-                                <td class="p-4 text-slate-300">Lat: -1.2676, Lng: 36.8108</td>
-                                <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">WiFi SSID + BT</span></td>
-                                <td class="p-4 text-right font-mono font-semibold text-emerald-400">KES 389,100</td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="p-4 font-medium flex items-center space-x-3">
-                                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">K</div>
-                                    <span>Kilimani Apex Bistro</span>
-                                </td>
-                                <td class="p-4 text-slate-400 font-mono text-xs">MER_NBI_00412</td>
-                                <td class="p-4 text-slate-300">Lat: -1.2921, Lng: 36.7844</td>
-                                <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Ultrasound RPID</span></td>
-                                <td class="p-4 text-right font-mono font-semibold text-emerald-400">KES 76,400</td>
+                        <tbody id="merchant-table-body" class="divide-y divide-slate-800 text-sm">
+                            <!-- Live Firestore records stream here dynamically -->
+                            <tr>
+                                <td colspan="5" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -174,9 +151,98 @@
         </div>
     </main>
 
-    <!-- Script to initialize Lucide icons -->
+    <!-- Firebase Connection & Real-Time Sync Script -->
     <script>
+        // Initialize Lucide icons
         lucide.createIcons();
+
+        // Replace with your actual Firebase project configuration credentials
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        let allMerchantsData = [];
+
+        // Real-time listener for the 'merchants' collection
+        db.collection("merchants").onSnapshot((snapshot) => {
+            allMerchantsData = [];
+            snapshot.forEach((doc) => {
+                allMerchantsData.push({ id: doc.id, ...doc.data() });
+            });
+
+            renderMerchantTable(allMerchantsData);
+
+            // Dynamically update the metric card counter if data is available
+            const countEl = document.getElementById("metric-merchant-count");
+            if (countEl) {
+                countEl.textContent = allMerchantsData.length > 0 ? allMerchantsData.length.toLocaleString() : "1,248";
+            }
+        }, (error) => {
+            console.error("Firestore sync error:", error);
+            document.getElementById("merchant-table-body").innerHTML = `
+                <tr><td colspan="5" class="p-8 text-center text-red-400">Failed to sync with Firebase. Check your project configuration rules.</td></tr>
+            `;
+        });
+
+        function renderMerchantTable(dataArray) {
+            let rowsHTML = "";
+            
+            if (dataArray.length === 0) {
+                rowsHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-500">No registered merchants found in Firestore.</td></tr>`;
+            } else {
+                dataArray.forEach((data) => {
+                    const initialLetter = data.name ? data.name.charAt(0).toUpperCase() : 'M';
+                    const activeChannel = data.activeChannel || "BLE + Ultrasound";
+                    
+                    rowsHTML += `
+                        <tr class="hover:bg-slate-800/50 transition">
+                            <td class="p-4 font-medium flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">
+                                    ${initialLetter}
+                                </div>
+                                <span class="text-white">${data.name || 'Unnamed Merchant'}</span>
+                            </td>
+                            <td class="p-4 text-slate-400 font-mono text-xs">${data.identifier || 'MER_NBI_0000'}</td>
+                            <td class="p-4 text-slate-300">Lat: ${data.lat || '0.00'}, Lng: ${data.lng || '0.00'}</td>
+                            <td class="p-4">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                                    ${activeChannel}
+                                </span>
+                            </td>
+                            <td class="p-4 text-right font-mono font-semibold text-emerald-400">
+                                KES ${(data.walletBalance || 0).toLocaleString()}
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            document.getElementById("merchant-table-body").innerHTML = rowsHTML;
+        }
+
+        // Live search filter input handler
+        const searchInput = document.getElementById("merchant-search-input");
+        if (searchInput) {
+            searchInput.addEventListener("input", (e) => {
+                const query = e.target.value.toLowerCase();
+                const filtered = allMerchantsData.filter(item => {
+                    const name = (item.name || "").toLowerCase();
+                    const identifier = (item.identifier || "").toLowerCase();
+                    return name.includes(query) || identifier.includes(query);
+                });
+                renderMerchantTable(filtered);
+            });
+        }
     </script>
 </body>
 </html>
