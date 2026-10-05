@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlinknPay - Wallet Ledgers & Liquidity</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg text-white">BP</div>
+                <span class="text-xl font-bold tracking-wide bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">BlinknPay</span>
+            </div>
+            <nav class="space-y-1">
+                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="merchant.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="store" class="w-5 h-5"></i>
+                    <span>Merchants</span>
+                </a>
+                <a href="customer.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>Customers</span>
+                </a>
+                <a href="rpids.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="radio" class="w-5 h-5"></i>
+                    <span>Quad-Channel RPIDs</span>
+                </a>
+                <a href="wallets.html" class="flex items-center space-x-3 px-4 py-3 bg-indigo-600/10 text-indigo-400 rounded-xl font-medium border border-indigo-500/20 text-sm">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                    <span>Wallet Ledgers</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-6 border-t border-slate-800 text-xs text-slate-500 flex items-center justify-between">
+            <span>Ledger Sync Live</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <!-- Top Header -->
+        <header class="h-20 bg-slate-900/50 backdrop-blur border-b border-slate-800 px-8 flex items-center justify-between sticky top-0 z-10">
+            <div>
+                <h1 class="text-xl font-bold">Wallet Liquidity & Ledgers</h1>
+                <p class="text-xs text-slate-400">Real-time tracking of platform liquidity, deposits, and transaction entries</p>
+            </div>
+            <div class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Firestore Ledger Connected</span>
+            </div>
+        </header>
+
+        <!-- Content Body -->
+        <div class="p-8 space-y-8 max-w-7xl w-full mx-auto">
+            
+            <!-- Liquidity Overview Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-400">Total System Liquidity</p>
+                    <h3 class="text-3xl font-bold mt-2 text-emerald-400 font-mono" id="total-liquidity">KES 0.00</h3>
+                    <span class="text-xs text-slate-500 mt-2 inline-block">Sum across active user and merchant wallets</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-400">Total Volume Transacted</p>
+                    <h3 class="text-3xl font-bold mt-2 text-indigo-400 font-mono" id="total-volume">KES 0.00</h3>
+                    <span class="text-xs text-emerald-400 mt-2 inline-block">Real-time ledger processing</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-400">Pending Settlement Queue</p>
+                    <h3 class="text-3xl font-bold mt-2 text-amber-400 font-mono">KES 0.00</h3>
+                    <span class="text-xs text-slate-500 mt-2 inline-block">Instant automated clearance</span>
+                </div>
+            </div>
+
+            <!-- Transaction Ledger Table -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-bold">Recent Transaction Ledger</h3>
+                        <p class="text-xs text-slate-400">Streaming real-time ledger entries from proximity transfers</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-xs uppercase tracking-wider text-slate-400 bg-slate-950/50">
+                                <th class="p-4 font-semibold">Transaction ID / Channel</th>
+                                <th class="p-4 font-semibold">Sender / Source</th>
+                                <th class="p-4 font-semibold">Recipient / Merchant</th>
+                                <th class="p-4 font-semibold">Status</th>
+                                <th class="p-4 font-semibold text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-table-body" class="divide-y divide-slate-800 text-sm">
+                            <tr>
+                                <td colspan="5" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore ledger stream...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Your Firebase project configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // Real-time listener for 'transactions' or 'ledgers' collection
+        db.collection("transactions").onSnapshot((snapshot) => {
+            let rowsHTML = "";
+            let totalVol = 0;
+
+            if (snapshot.empty) {
+                document.getElementById("ledger-table-body").innerHTML = `
+                    <tr><td colspan="5" class="p-8 text-center text-slate-500">No transaction records found in ledger.</td></tr>
+                `;
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const amount = data.amount || 0;
+                totalVol += amount;
+
+                const statusBadge = data.status === "completed" || data.status === "success"
+                    ? `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Completed</span>`
+                    : `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">Processing</span>`;
+
+                rowsHTML += `
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="p-4 font-mono text-xs">
+                            <div class="text-slate-200">${doc.id.substring(0, 10)}...</div>
+                            <div class="text-indigo-400">${data.channel || "BLE / Ultrasound"}</div>
+                        </td>
+                        <td class="p-4 text-slate-300">${data.senderName || data.senderId || "Customer"}</td>
+                        <td class="p-4 text-slate-300">${data.recipientName || data.merchantId || "Merchant"}</td>
+                        <td class="p-4">${statusBadge}</td>
+                        <td class="p-4 text-right font-mono font-semibold text-emerald-400">
+                            KES ${amount.toLocaleString()}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("ledger-table-body").innerHTML = rowsHTML;
+            document.getElementById("total-volume").textContent = `KES ${totalVol.toLocaleString()}`;
+        }, (error) => {
+            console.error("Error fetching transactions:", error);
+            document.getElementById("ledger-table-body").innerHTML = `
+                <tr><td colspan="5" class="p-8 text-center text-rose-500">Error connecting to ledger stream.</td></tr>
+            `;
+        });
+
+        // Calculate aggregate liquidity from user/merchant profiles if stored
+        db.collection("customers").onSnapshot((snapshot) => {
+            let totalLiquidity = 0;
+            snapshot.forEach((doc) => {
+                totalLiquidity += (doc.data().walletBalance || 0);
+            });
+            document.getElementById("total-liquidity").textContent = `KES ${totalLiquidity.toLocaleString()}`;
+        });
+    </script>
+</body>
+</html>
