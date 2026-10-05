@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlinknPay - Operations & Merchant Command Center</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg text-white">BP</div>
+                <span class="text-xl font-bold tracking-wide bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">BlinknPay</span>
+            </div>
+            <nav class="space-y-1">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 bg-indigo-600/10 text-indigo-400 rounded-xl font-medium border border-indigo-500/20">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
+                    <i data-lucide="store" class="w-5 h-5"></i>
+                    <span>Merchants</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>Customers</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
+                    <i data-lucide="radio" class="w-5 h-5"></i>
+                    <span>Quad-Channel RPIDs</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                    <span>Wallet Ledgers</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-6 border-t border-slate-800">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-sm font-semibold">EM</div>
+                <div>
+                    <p class="text-sm font-medium">Admin Portal</p>
+                    <p class="text-xs text-slate-500">Node Cluster Active</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <!-- Top Header -->
+        <header class="h-20 bg-slate-900/50 backdrop-blur border-b border-slate-800 px-8 flex items-center justify-between sticky top-0 z-10">
+            <div>
+                <h1 class="text-xl font-bold">Platform Command Center</h1>
+                <p class="text-xs text-slate-400">Real-time telemetry for merchants, wallet liquidity, and proximity nodes</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Firebase Sync Live</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Body -->
+        <div class="p-8 space-y-8">
+            <!-- Metrics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-slate-400">Total Active Merchants</p>
+                            <h3 class="text-3xl font-bold mt-2">1,248</h3>
+                        </div>
+                        <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl"><i data-lucide="store" class="w-6 h-6"></i></div>
+                    </div>
+                    <span class="text-xs text-emerald-400 font-medium mt-4 inline-block">+12% from last month</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-slate-400">Registered Customers</p>
+                            <h3 class="text-3xl font-bold mt-2">24,590</h3>
+                        </div>
+                        <div class="p-3 bg-cyan-500/10 text-cyan-400 rounded-xl"><i data-lucide="users" class="w-6 h-6"></i></div>
+                    </div>
+                    <span class="text-xs text-emerald-400 font-medium mt-4 inline-block">+18% growth rate</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-slate-400">Aggregate Wallet Liquidity</p>
+                            <h3 class="text-3xl font-bold mt-2">KES 4.82M</h3>
+                        </div>
+                        <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl"><i data-lucide="wallet" class="w-6 h-6"></i></div>
+                    </div>
+                    <span class="text-xs text-emerald-400 font-medium mt-4 inline-block">Balanced across channels</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-slate-400">Active RPID Beacons</p>
+                            <h3 class="text-3xl font-bold mt-2">914</h3>
+                        </div>
+                        <div class="p-3 bg-amber-500/10 text-amber-400 rounded-xl"><i data-lucide="radio" class="w-6 h-6"></i></div>
+                    </div>
+                    <span class="text-xs text-slate-400 font-medium mt-4 inline-block">Quad-channel operational</span>
+                </div>
+            </div>
+
+            <!-- Data Tables Section: Registered Merchants -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                <div class="p-6 border-b border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold">Registered Merchants Telemetry</h3>
+                        <p class="text-xs text-slate-400">Live feed tracking merchant identifiers, coordinates, and real-time wallet amounts</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <input type="text" placeholder="Search merchant name or ID..." class="bg-slate-950 border border-slate-800 text-sm rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500 text-slate-200 placeholder-slate-500 w-64">
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-xs uppercase tracking-wider text-slate-400 bg-slate-950/50">
+                                <th class="p-4 font-semibold">Merchant Name</th>
+                                <th class="p-4 font-semibold">Identifier (ID / Terminal)</th>
+                                <th class="p-4 font-semibold">Grid Position / Location</th>
+                                <th class="p-4 font-semibold">Active Channel</th>
+                                <th class="p-4 font-semibold text-right">Wallet Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 text-sm">
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="p-4 font-medium flex items-center space-x-3">
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">N</div>
+                                    <span>Nairobi CBD Java Station</span>
+                                </td>
+                                <td class="p-4 text-slate-400 font-mono text-xs">MER_NBI_00184</td>
+                                <td class="p-4 text-slate-300">Lat: -1.2863, Lng: 36.8172</td>
+                                <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">BLE + Ultrasound</span></td>
+                                <td class="p-4 text-right font-mono font-semibold text-emerald-400">KES 142,500</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="p-4 font-medium flex items-center space-x-3">
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">W</div>
+                                    <span>Westlands QuickMart Hub</span>
+                                </td>
+                                <td class="p-4 text-slate-400 font-mono text-xs">MER_NBI_00291</td>
+                                <td class="p-4 text-slate-300">Lat: -1.2676, Lng: 36.8108</td>
+                                <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">WiFi SSID + BT</span></td>
+                                <td class="p-4 text-right font-mono font-semibold text-emerald-400">KES 389,100</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="p-4 font-medium flex items-center space-x-3">
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">K</div>
+                                    <span>Kilimani Apex Bistro</span>
+                                </td>
+                                <td class="p-4 text-slate-400 font-mono text-xs">MER_NBI_00412</td>
+                                <td class="p-4 text-slate-300">Lat: -1.2921, Lng: 36.7844</td>
+                                <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Ultrasound RPID</span></td>
+                                <td class="p-4 text-right font-mono font-semibold text-emerald-400">KES 76,400</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script to initialize Lucide icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
