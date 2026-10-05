@@ -8,6 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Firebase App & Firestore SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex">
 
@@ -15,59 +18,98 @@
     <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
         <div class="p-6">
             <div class="flex items-center space-x-3 mb-8">
-                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-lg text-white shadow-lg shadow-indigo-500/30">BP</div>
-                <div>
-                    <h1 class="font-bold tracking-tight">BlinknPay</h1>
-                    <p class="text-xs text-slate-400">Merchant Terminal</p>
-                </div>
+                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg text-white">BP</div>
+                <span class="text-xl font-bold tracking-wide bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">BlinknPay</span>
             </div>
             <nav class="space-y-1">
-                <a href="index.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition text-sm font-medium">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                     <span>Overview</span>
                 </a>
-                <a href="merchant.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 text-indigo-400 font-medium text-sm border border-indigo-500/20">
-                    <i data-lucide="store" class="w-4 h-4"></i>
+                <a href="merchant.html" class="flex items-center space-x-3 px-4 py-3 bg-indigo-600/10 text-indigo-400 rounded-xl font-medium border border-indigo-500/20 text-sm">
+                    <i data-lucide="store" class="w-5 h-5"></i>
                     <span>Merchants</span>
+                </a>
+                <a href="customer.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>Customers</span>
+                </a>
+                <a href="rpids.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="radio" class="w-5 h-5"></i>
+                    <span>Quad-Channel RPIDs</span>
+                </a>
+                <a href="wallets.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                    <span>Wallet Ledgers</span>
+                </a>
+                <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="node.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="cpu" class="w-5 h-5"></i>
+                    <span>Hardware Nodes</span>
+                </a>
+                <a href="disputes.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                    <span>Disputes</span>
+                </a>
+                <a href="settings.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span>Settings</span>
                 </a>
             </nav>
         </div>
-        <div class="p-4 border-t border-slate-800 text-xs text-slate-500 flex items-center justify-between">
-            <span>Firebase Sync Active</span>
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <div class="p-6 border-t border-slate-800">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-sm font-semibold">EM</div>
+                <div>
+                    <p class="text-sm font-medium">Admin Portal</p>
+                    <p class="text-xs text-slate-500">Node Cluster Active</p>
+                </div>
+            </div>
         </div>
     </aside>
 
     <!-- Main Content Area -->
     <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
         <!-- Top Header -->
-        <header class="h-16 border-b border-slate-800 bg-slate-900/50 backdrop-blur px-8 flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-slate-200">Merchant Status Telemetry</h2>
-            <div class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                Live Firestore Feed
+        <header class="h-20 bg-slate-900/50 backdrop-blur border-b border-slate-800 px-8 flex items-center justify-between sticky top-0 z-10">
+            <div>
+                <h1 class="text-xl font-bold">Merchant Status Telemetry</h1>
+                <p class="text-xs text-slate-400">Real-time status tracking and monitoring from Firestore `merchants` collection</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Live Firestore Feed</span>
+                </div>
             </div>
         </header>
 
         <!-- Content Body -->
-        <div class="p-8 max-w-7xl w-full mx-auto space-y-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-                <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+        <div class="p-8 space-y-6 max-w-7xl w-full mx-auto">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                <div class="p-6 border-b border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                        <h3 class="font-semibold text-slate-200">Active Merchant Nodes</h3>
-                        <p class="text-xs text-slate-400">Real-time status tracking from Firestore `merchants` collection</p>
+                        <h3 class="text-lg font-bold">Active Merchant Nodes</h3>
+                        <p class="text-xs text-slate-400">Live operational telemetry across quad-channel proximity points</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <input type="text" id="merchant-search-input" placeholder="Search merchant name or ID..." class="bg-slate-950 border border-slate-800 text-sm rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500 text-slate-200 placeholder-slate-500 w-64">
                     </div>
                 </div>
 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="border-b border-slate-800 text-xs uppercase tracking-wider text-slate-400 bg-slate-950/40">
-                                <th class="p-4 font-medium">Merchant Name</th>
-                                <th class="p-4 font-medium">Identifier / Terminal</th>
-                                <th class="p-4 font-medium">Location Coordinates</th>
-                                <th class="p-4 font-medium">Active Channel</th>
-                                <th class="p-4 font-medium">Status</th>
-                                <th class="p-4 font-medium text-right">Wallet Balance</th>
+                            <tr class="border-b border-slate-800 text-xs uppercase tracking-wider text-slate-400 bg-slate-950/50">
+                                <th class="p-4 font-semibold">Merchant Name</th>
+                                <th class="p-4 font-semibold">Identifier / Terminal</th>
+                                <th class="p-4 font-semibold">Location Coordinates</th>
+                                <th class="p-4 font-semibold">Active Channel</th>
+                                <th class="p-4 font-semibold">Status</th>
+                                <th class="p-4 font-semibold text-right">Wallet Balance</th>
                             </tr>
                         </thead>
                         <tbody id="merchant-status-tbody" class="divide-y divide-slate-800 text-sm">
@@ -81,73 +123,104 @@
         </div>
     </main>
 
-    <!-- Firebase SDK Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
+    <!-- Firebase Connection & Real-Time Sync Script -->
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
 
-        // Your Firebase configuration (replace with your actual project credentials)
+        // Live Firebase Web Configuration Credentials
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "SENDER_ID",
-            appId: "APP_ID"
+            apiKey: "AIzaSyBuUTCdsv83R8EgSSLUKTiWhCMpiJuRjto",
+            authDomain: "blinknpay.firebaseapp.com",
+            databaseURL: "https://blinknpay-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "blinknpay",
+            storageBucket: "blinknpay.appspot.com",
+            messagingSenderId: "358623370620",
+            appId: "1:358623370620:web:9951ca49e4fdbcc66318f9",
+            measurementId: "G-8GGMZB1T04"
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.firestore();
+
+        let allMerchantsData = [];
 
         // Real-time listener for the 'merchants' collection
         db.collection("merchants").onSnapshot((snapshot) => {
-            let rowsHTML = "";
-
-            if (snapshot.empty) {
-                document.getElementById("merchant-status-tbody").innerHTML = `
-                    <tr><td colspan="6" class="p-8 text-center text-slate-500">No merchant documents found in Firestore.</td></tr>
-                `;
-                return;
-            }
-
+            allMerchantsData = [];
             snapshot.forEach((doc) => {
-                const data = doc.data();
-                
-                // Determine status badge styling
-                const isOnline = data.status === "online" || data.active;
-                const statusBadge = isOnline 
-                    ? `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Online</span>`
-                    : `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Offline</span>`;
-
-                rowsHTML += `
-                    <tr class="hover:bg-slate-800/50 transition">
-                        <td class="p-4 font-medium text-slate-200">${data.name || "Unnamed Merchant"}</td>
-                        <td class="p-4 text-slate-400 font-mono text-xs">${data.identifier || data.terminalId || "N/A"}</td>
-                        <td class="p-4 text-slate-300 font-mono text-xs">Lat: ${data.lat || 0}, Lng: ${data.lng || 0}</td>
-                        <td class="p-4">
-                            <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                                ${data.activeChannel || "BLE + Ultrasound"}
-                            </span>
-                        </td>
-                        <td class="p-4">${statusBadge}</td>
-                        <td class="p-4 text-right font-mono font-semibold text-emerald-400">
-                            KES ${(data.walletBalance || 0).toLocaleString()}
-                        </td>
-                    </tr>
-                `;
+                allMerchantsData.push({ id: doc.id, ...doc.data() });
             });
 
-            document.getElementById("merchant-status-tbody").innerHTML = rowsHTML;
+            renderMerchantTable(allMerchantsData);
         }, (error) => {
             console.error("Error listening to merchants collection:", error);
             document.getElementById("merchant-status-tbody").innerHTML = `
-                <tr><td colspan="6" class="p-8 text-center text-rose-500">Error connecting to Firestore. Check your configuration credentials.</td></tr>
+                <tr><td colspan="6" class="p-8 text-center text-rose-400">Failed to sync with Firebase. Check your configuration rules.</td></tr>
             `;
         });
+
+        function renderMerchantTable(dataArray) {
+            let rowsHTML = "";
+
+            if (dataArray.length === 0) {
+                rowsHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-500">No merchant documents found in Firestore.</td></tr>`;
+            } else {
+                dataArray.forEach((data) => {
+                    const displayName = data.businessName || data.name || 'Unnamed Merchant';
+                    const initialLetter = displayName.charAt(0).toUpperCase();
+                    const identifierCode = data.merchantCode || data.identifier || data.terminalId || 'MER_NBI_0000';
+                    const activeChannel = data.activeChannel || "Quad-Channel Engine";
+                    const walletBalance = data.balance !== undefined ? data.balance : (data.walletBalance || 0);
+
+                    // Determine status badge styling
+                    const isOnline = data.status === "online" || data.active === true;
+                    const statusBadge = isOnline 
+                        ? `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Online</span>`
+                        : `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Offline</span>`;
+
+                    rowsHTML += `
+                        <tr class="hover:bg-slate-800/50 transition">
+                            <td class="p-4 font-medium flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center">
+                                    ${initialLetter}
+                                </div>
+                                <span class="text-white">${displayName}</span>
+                            </td>
+                            <td class="p-4 text-slate-400 font-mono text-xs">${identifierCode}</td>
+                            <td class="p-4 text-slate-300 font-mono text-xs">Lat: ${data.lat || '0.00'}, Lng: ${data.lng || '0.00'}</td>
+                            <td class="p-4">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                                    ${activeChannel}
+                                </span>
+                            </td>
+                            <td class="p-4">${statusBadge}</td>
+                            <td class="p-4 text-right font-mono font-semibold text-emerald-400">
+                                KES ${walletBalance.toLocaleString()}
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            document.getElementById("merchant-status-tbody").innerHTML = rowsHTML;
+        }
+
+        // Live search filter input handler
+        const searchInput = document.getElementById("merchant-search-input");
+        if (searchInput) {
+            searchInput.addEventListener("input", (e) => {
+                const query = e.target.value.toLowerCase();
+                const filtered = allMerchantsData.filter(item => {
+                    const name = (item.businessName || item.name || "").toLowerCase();
+                    const identifier = (item.merchantCode || item.identifier || item.terminalId || "").toLowerCase();
+                    return name.includes(query) || identifier.includes(query);
+                });
+                renderMerchantTable(filtered);
+            });
+        }
     </script>
 </body>
 </html>
