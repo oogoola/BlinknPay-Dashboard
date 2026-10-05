@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlinknPay - Quad-Channel RPID Telemetry</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg text-white">BP</div>
+                <span class="text-xl font-bold tracking-wide bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">BlinknPay</span>
+            </div>
+            <nav class="space-y-1">
+                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="merchant.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="store" class="w-5 h-5"></i>
+                    <span>Merchants</span>
+                </a>
+                <a href="customer.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>Customers</span>
+                </a>
+                <a href="rpids.html" class="flex items-center space-x-3 px-4 py-3 bg-indigo-600/10 text-indigo-400 rounded-xl font-medium border border-indigo-500/20 text-sm">
+                    <i data-lucide="radio" class="w-5 h-5"></i>
+                    <span>Quad-Channel RPIDs</span>
+                </a>
+                <a href="wallets.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                    <span>Wallet Ledgers</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-6 border-t border-slate-800 text-xs text-slate-500 flex items-center justify-between">
+            <span>Quad-Engine Sync</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <!-- Top Header -->
+        <header class="h-20 bg-slate-900/50 backdrop-blur border-b border-slate-800 px-8 flex items-center justify-between sticky top-0 z-10">
+            <div>
+                <h1 class="text-xl font-bold">Quad-Channel RPID Engine</h1>
+                <p class="text-xs text-slate-400">Monitoring rotating proximity identifiers across Bluetooth, BLE, Ultrasound, and WiFi SSID</p>
+            </div>
+            <div class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                <span>Propagation Active</span>
+            </div>
+        </header>
+
+        <!-- Content Body -->
+        <div class="p-8 space-y-8 max-w-7xl w-full mx-auto">
+            
+            <!-- Channel Status Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Classic BT -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-mono uppercase tracking-wider text-slate-400">Channel 1</p>
+                            <h3 class="text-lg font-bold mt-1 text-slate-200">Classic Bluetooth</h3>
+                        </div>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/80 flex justify-between text-xs text-slate-400">
+                        <span>Handshake Latency:</span>
+                        <span class="text-emerald-400 font-mono">110ms</span>
+                    </div>
+                </div>
+
+                <!-- BLE -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-mono uppercase tracking-wider text-slate-400">Channel 2</p>
+                            <h3 class="text-lg font-bold mt-1 text-slate-200">BLE Beacon</h3>
+                        </div>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/80 flex justify-between text-xs text-slate-400">
+                        <span>Handshake Latency:</span>
+                        <span class="text-emerald-400 font-mono">45ms</span>
+                    </div>
+                </div>
+
+                <!-- Ultrasound -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-mono uppercase tracking-wider text-slate-400">Channel 3</p>
+                            <h3 class="text-lg font-bold mt-1 text-slate-200">Ultrasound Audio</h3>
+                        </div>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/80 flex justify-between text-xs text-slate-400">
+                        <span>Handshake Latency:</span>
+                        <span class="text-indigo-400 font-mono">85ms</span>
+                    </div>
+                </div>
+
+                <!-- WiFi SSID -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-mono uppercase tracking-wider text-slate-400">Channel 4</p>
+                            <h3 class="text-lg font-bold mt-1 text-slate-200">WiFi SSID Broadcast</h3>
+                        </div>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/80 flex justify-between text-xs text-slate-400">
+                        <span>Handshake Latency:</span>
+                        <span class="text-cyan-400 font-mono">60ms</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active RPID Table -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-bold">Rotating Proximity Identifiers (RPID) Stream</h3>
+                        <p class="text-xs text-slate-400">Real-time cryptographic token propagation across proximity nodes</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-xs uppercase tracking-wider text-slate-400 bg-slate-950/50">
+                                <th class="p-4 font-semibold">Node / Device ID</th>
+                                <th class="p-4 font-semibold">Active Channels</th>
+                                <th class="p-4 font-semibold">Current RPID Token</th>
+                                <th class="p-4 font-semibold">Rotation TTL</th>
+                                <th class="p-4 font-semibold text-right">Signal Quality</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rpid-table-body" class="divide-y divide-slate-800 text-sm">
+                            <tr>
+                                <td colspan="5" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore RPID stream...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Your Firebase project configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // Real-time listener for 'rpids' or proximity nodes collection
+        db.collection("rpids").onSnapshot((snapshot) => {
+            let rowsHTML = "";
+
+            if (snapshot.empty) {
+                document.getElementById("rpid-table-body").innerHTML = `
+                    <tr><td colspan="5" class="p-8 text-center text-slate-500">No active RPID telemetry records found.</td></tr>
+                `;
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                
+                rowsHTML += `
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="p-4 font-medium text-slate-200">
+                            <div>${data.deviceName || "Proximity Node"}</div>
+                            <div class="text-xs text-slate-500 font-mono">${data.nodeId || doc.id}</div>
+                        </td>
+                        <td class="p-4">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                                ${data.channels || "Quad-Channel Active"}
+                            </span>
+                        </td>
+                        <td class="p-4 font-mono text-xs text-cyan-400">${data.currentRpid || "RPID_x8f9c21b4"}</td>
+                        <td class="p-4 text-slate-300 font-mono text-xs">${data.ttl || "14s remaining"}</td>
+                        <td class="p-4 text-right font-mono text-emerald-400 font-semibold">${data.signalStrength || "-62 dBm"}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("rpid-table-body").innerHTML = rowsHTML;
+        }, (error) => {
+            console.error("Error listening to RPID stream:", error);
+            document.getElementById("rpid-table-body").innerHTML = `
+                <tr><td colspan="5" class="p-8 text-center text-rose-500">Error connecting to RPID telemetry stream.</td></tr>
+            `;
+        });
+    </script>
+</body>
+</html>
