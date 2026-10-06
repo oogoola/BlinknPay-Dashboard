@@ -12,6 +12,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <!-- Firebase Firestore SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- Firebase Realtime Database SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex">
 
@@ -65,7 +67,7 @@
             <h2 class="text-lg font-semibold text-slate-200">Customer Payment Ledger</h2>
             <div id="stream-status" class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center space-x-2">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Connecting to Firestore...</span>
+                <span>Connecting to Firebase...</span>
             </div>
         </header>
 
@@ -75,7 +77,7 @@
                 <div class="p-6 border-b border-slate-800 flex justify-between items-center">
                     <div>
                         <h3 class="font-semibold text-slate-200">Recent Payment Activities</h3>
-                        <p class="text-xs text-slate-400">Aggregated from 'transactions' and matched with registered 'users' profiles</p>
+                        <p class="text-xs text-slate-400">Synced across Firestore and Realtime Database (blinknpay)</p>
                     </div>
                 </div>
 
@@ -94,7 +96,7 @@
                         </thead>
                         <tbody id="customer-table-body" class="divide-y divide-slate-800 text-sm">
                             <tr>
-                                <td colspan="7" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore stream...</td>
+                                <td colspan="7" class="p-8 text-center text-slate-500">Connecting to Firebase blinknpay stream...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -103,28 +105,32 @@
         </div>
     </main>
 
-    <!-- Firebase Live Connection & Real-time Join Script -->
+    <!-- Firebase Configuration & Sync Script -->
     <script>
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyBuUTCdsv83R8EgSSLUKtiWhCMpiJuRjto",
+            authDomain: "blinknpay.firebaseapp.com",
+            databaseURL: "https://blinknpay-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "blinknpay",
+            storageBucket: "blinknpay.firebasestorage.app",
+            messagingSenderId: "358623370620",
+            appId: "1:358623370620:web:9951ca49e4fdbcc66318f9",
+            measurementId: "G-8GGMZB1T04"
         };
 
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
+        
         const db = firebase.firestore();
+        const rtdb = firebase.database();
 
         async function initCustomerSync() {
             const streamStatus = document.getElementById("stream-status");
             const tableBody = document.getElementById("customer-table-body");
 
             try {
-                // 1. Fetch registered users once to create a lookup map by phone number
+                // 1. Fetch registered users from Firestore to match names and emails
                 const usersSnapshot = await db.collection("users").get();
                 const userDirectory = {};
                 usersSnapshot.forEach(doc => {
@@ -138,24 +144,22 @@
                     }
                 });
 
-                // 2. Listen in real-time to the 'transactions' collection
-                db.collection("transactions").onSnapshot((snapshot) => {
-                    streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Live Firestore Stream Active</span>';
+                // Helper function to render transactions on screen
+                function renderLedger(transactionsList) {
+                    streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Live Stream Active</span>';
 
-                    if (snapshot.empty) {
-                        tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">No transaction records found in Firestore collection 'transactions'.</td></tr>`;
+                    if (transactionsList.length === 0) {
+                        tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">No transactions found in Firestore or Realtime Database.</td></tr>`;
                         return;
                     }
 
                     const customerMap = {};
 
-                    snapshot.forEach((doc) => {
-                        const tx = doc.data();
-                        const phone = tx.phoneNumber || tx.phone || "Unknown Phone";
+                    transactionsList.forEach((tx) => {
+                        const phone = tx.phoneNumber || tx.phone || tx.customerPhone || "Unknown Phone";
                         const cleanPhone = phone.trim();
-                        const amount = Number(tx.amount || 0);
+                        const amount = Number(tx.amount || tx.paidAmount || 0);
                         
-                        // Check if user is registered in the users collection
                         const registeredProfile = userDirectory[cleanPhone] || {
                             fullName: tx.customerName || tx.name || "Unregistered Guest",
                             email: "N/A (Guest)"
@@ -168,13 +172,12 @@
                                 email: registeredProfile.email,
                                 totalAmount: 0,
                                 count: 0,
-                                lastTimestamp: tx.transactionDate || tx.timestamp || "Recent"
+                                lastTimestamp: tx.transactionDate || tx.timestamp || tx.createdAt || "Recent"
                             };
                         }
 
                         customerMap[cleanPhone].totalAmount += amount;
                         customerMap[cleanPhone].count += 1;
-                        customerMap[cleanPhone].lastTimestamp = tx.transactionDate || tx.timestamp || customerMap[cleanPhone].lastTimestamp;
                     });
 
                     const customers = Object.values(customerMap);
@@ -199,17 +202,38 @@
                     });
 
                     tableBody.innerHTML = rowsHTML;
+                }
+
+                // 2. Listen to Firestore 'transactions' collection
+                db.collection("transactions").onSnapshot((firestoreSnapshot) => {
+                    let allTxs = [];
+                    firestoreSnapshot.forEach(doc => {
+                        allTxs.push(doc.data());
+                    });
+
+                    // Also check Realtime Database 'transactions' node just in case it's stored there
+                    rtdb.ref("transactions").on("value", (rtdbSnapshot) => {
+                        const rtdbData = rtdbSnapshot.val();
+                        if (rtdbData) {
+                            Object.values(rtdbData).forEach(tx => {
+                                allTxs.push(tx);
+                            });
+                        }
+                        renderLedger(allTxs);
+                    }, () => {
+                        // If RTDB errors or isn't used, just render what we got from Firestore
+                        renderLedger(allTxs);
+                    });
 
                 }, (error) => {
-                    console.error("Firestore Transaction Stream Error:", error);
+                    console.error("Firestore Error:", error);
                     streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Stream Error</span>';
-                    tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-400">Error streaming transaction records from Firestore.</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-400">Error connecting to Firestore 'transactions' collection. Verify collection name in Firebase console.</td></tr>`;
                 });
 
             } catch (err) {
-                console.error("Initialization Error:", err);
-                streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Init Error</span>';
-                tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-400">Failed to load user records for matching. Check console.</td></tr>`;
+                console.error("Setup Error:", err);
+                streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Setup Error</span>';
             }
         }
 
