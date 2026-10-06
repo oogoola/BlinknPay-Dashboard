@@ -65,7 +65,7 @@
         <header class="h-20 bg-slate-900/50 backdrop-blur border-b border-slate-800 px-8 flex items-center justify-between sticky top-0 z-10">
             <div>
                 <h1 class="text-xl font-bold">System & API Settings</h1>
-                <p class="text-xs text-slate-400">Manage Firebase credentials, webhook endpoints, RPID TTL intervals, and admin permissions</p>
+                <p class="text-xs text-slate-400">Manage secure environment bindings, webhook hooks, RPID TTL intervals, and admin permissions</p>
             </div>
             <div class="flex items-center space-x-3">
                 <button onclick="alert('Configuration settings successfully synchronized!')" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition flex items-center space-x-2 shadow-lg shadow-indigo-600/20">
@@ -164,7 +164,7 @@
                         </div>
                         <div>
                             <h3 class="font-bold text-base">Firebase Credentials & Cloud Functions</h3>
-                            <p class="text-xs text-slate-400">Configure database keys, project instances, and backend webhook URLs</p>
+                            <p class="text-xs text-slate-400">Configure secure environment bindings and masked runtime targets</p>
                         </div>
                     </div>
                     <span class="text-xs bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-3 py-1 rounded-full font-mono">Firestore Connected</span>
@@ -173,17 +173,17 @@
                 <div class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-mono text-slate-400 mb-1">Firebase Project ID</label>
-                            <input type="text" value="blinknpay-core-prod-ke" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono">
+                            <label class="block text-xs font-mono text-slate-400 mb-1">Firebase Project ID Binding</label>
+                            <input type="text" value="••••••••••••••••••••" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-500 focus:outline-none font-mono cursor-not-allowed">
                         </div>
                         <div>
-                            <label class="block text-xs font-mono text-slate-400 mb-1">Web API Key (Firebase Auth)</label>
-                            <input type="password" value="AIzaSyD-MockFirebaseKeyForBlinknPay99" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono">
+                            <label class="block text-xs font-mono text-slate-400 mb-1">Web API Key Secret</label>
+                            <input type="password" value="••••••••••••••••••••••••••••••••" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-500 focus:outline-none font-mono cursor-not-allowed">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-mono text-slate-400 mb-1">Cloud Functions Base Endpoint URL</label>
-                        <input type="text" value="https://us-central1-blinknpay-core-prod.cloudfunctions.net/api" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono">
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Cloud Functions Gateway Routing</label>
+                        <input type="text" value="https://[masked-region]-[masked-project].cloudfunctions.net/api" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-500 focus:outline-none font-mono cursor-not-allowed">
                     </div>
                 </div>
             </div>
@@ -197,7 +197,7 @@
                         </div>
                         <div>
                             <h3 class="font-bold text-base">Webhook Endpoints & Event Subscriptions</h3>
-                            <p class="text-xs text-slate-400">Manage payload destinations for real-time transactional hooks</p>
+                            <p class="text-xs text-slate-400">Manage obfuscated payload destinations for real-time transactional hooks</p>
                         </div>
                     </div>
                     <button class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg transition">Add Endpoint</button>
@@ -205,8 +205,8 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-mono text-slate-400 mb-1">Primary Transactional Dispatch URL</label>
-                        <input type="text" value="https://api.blinknpay.co.ke/v1/webhooks/transactions" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono">
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Primary Transactional Dispatch Hook</label>
+                        <input type="text" value="https://api.blinknpay.co.ke/vX/webhooks/secured-gateway" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-500 focus:outline-none font-mono cursor-not-allowed">
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
                         <label class="flex items-center space-x-2 text-xs text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800 cursor-pointer">
