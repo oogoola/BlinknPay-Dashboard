@@ -75,7 +75,7 @@
                 <div class="p-6 border-b border-slate-800 flex justify-between items-center">
                     <div>
                         <h3 class="font-semibold text-slate-200">Recent Payment Activities</h3>
-                        <p class="text-xs text-slate-400">Ordered by latest transaction timestamp with cumulative payment frequency counts</p>
+                        <p class="text-xs text-slate-400">Aggregated from 'transactions' and matched with registered 'users' profiles</p>
                     </div>
                 </div>
 
@@ -86,14 +86,15 @@
                                 <th class="p-4 font-medium w-16">#</th>
                                 <th class="p-4 font-medium">Customer Name</th>
                                 <th class="p-4 font-medium">Phone Number</th>
-                                <th class="p-4 font-medium">Amount Paid</th>
+                                <th class="p-4 font-medium">Email Address</th>
+                                <th class="p-4 font-medium">Total Amount Paid</th>
                                 <th class="p-4 font-medium text-center">Payment Count</th>
                                 <th class="p-4 font-medium text-right">Last Paid Timestamp</th>
                             </tr>
                         </thead>
                         <tbody id="customer-table-body" class="divide-y divide-slate-800 text-sm">
                             <tr>
-                                <td colspan="6" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore customer stream...</td>
+                                <td colspan="7" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore stream...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -102,7 +103,7 @@
         </div>
     </main>
 
-    <!-- Firebase Live Connection & Real-time Render Script -->
+    <!-- Firebase Live Connection & Real-time Join Script -->
     <script>
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
@@ -113,73 +114,105 @@
             appId: "YOUR_APP_ID"
         };
 
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
 
-        function initCustomerSync() {
-            // Real-time listener querying the 'customers' collection sorted by latest payment date
-            db.collection("customers").orderBy("lastPaidAt", "desc").onSnapshot((snapshot) => {
-                const streamStatus = document.getElementById("stream-status");
-                streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Live Firestore Stream Active</span>';
+        async function initCustomerSync() {
+            const streamStatus = document.getElementById("stream-status");
+            const tableBody = document.getElementById("customer-table-body");
 
-                let rowsHTML = "";
-
-                if (snapshot.empty) {
-                    document.getElementById("customer-table-body").innerHTML = `
-                        <tr><td colspan="6" class="p-8 text-center text-slate-500">No customer records found in Firestore collection 'customers'.</td></tr>
-                    `;
-                    return;
-                }
-
-                let index = 1;
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    
-                    // Parse timestamp safely
-                    let timeString = "Just now";
-                    if (data.lastPaidAt) {
-                        const dateObj = data.lastPaidAt.toDate ? data.lastPaidAt.toDate() : new Date(data.lastPaidAt);
-                        timeString = dateObj.toLocaleTimeString() + " - " + dateObj.toLocaleDateString();
+            try {
+                // 1. Fetch registered users once to create a lookup map by phone number
+                const usersSnapshot = await db.collection("users").get();
+                const userDirectory = {};
+                usersSnapshot.forEach(doc => {
+                    const u = doc.data();
+                    const phone = (u.phone || "").trim();
+                    if (phone) {
+                        userDirectory[phone] = {
+                            fullName: u.fullName || "Registered User",
+                            email: u.email || "No Email Provided"
+                        };
                     }
-
-                    rowsHTML += `
-                        <tr class="hover:bg-slate-800/50 transition">
-                            <td class="p-4 font-mono text-slate-500 text-xs">${index++}</td>
-                            <td class="p-4 font-medium text-slate-200">
-                                ${data.name || data.customerName || "Anonymous User"}
-                            </td>
-                            <td class="p-4 text-slate-300 font-mono text-xs">
-                                ${data.phoneNumber || data.phone || "N/A"}
-                            </td>
-                            <td class="p-4 font-mono font-semibold text-emerald-400">
-                                KES ${(data.amountPaid || data.lastAmount || 0).toLocaleString()}
-                            </td>
-                            <td class="p-4 text-center">
-                                <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                                    ${data.paymentCount || data.totalTxCount || 1}x
-                                </span>
-                            </td>
-                            <td class="p-4 text-right text-slate-400 font-mono text-xs">
-                                ${timeString}
-                            </td>
-                        </tr>
-                    `;
                 });
 
-                document.getElementById("customer-table-body").innerHTML = rowsHTML;
-            }, (error) => {
-                console.error("Firestore Customer Sync Error:", error);
-                document.getElementById("stream-status").innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Stream Error (Check Indexes)</span>';
-                document.getElementById("customer-table-body").innerHTML = `
-                    <tr><td colspan="6" class="p-8 text-center text-rose-400">Error connecting to Firestore. If sorting requires an index, check your Firebase console logs.</td></tr>
-                `;
-            });
+                // 2. Listen in real-time to the 'transactions' collection
+                db.collection("transactions").onSnapshot((snapshot) => {
+                    streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Live Firestore Stream Active</span>';
+
+                    if (snapshot.empty) {
+                        tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">No transaction records found in Firestore collection 'transactions'.</td></tr>`;
+                        return;
+                    }
+
+                    const customerMap = {};
+
+                    snapshot.forEach((doc) => {
+                        const tx = doc.data();
+                        const phone = tx.phoneNumber || tx.phone || "Unknown Phone";
+                        const cleanPhone = phone.trim();
+                        const amount = Number(tx.amount || 0);
+                        
+                        // Check if user is registered in the users collection
+                        const registeredProfile = userDirectory[cleanPhone] || {
+                            fullName: tx.customerName || tx.name || "Unregistered Guest",
+                            email: "N/A (Guest)"
+                        };
+
+                        if (!customerMap[cleanPhone]) {
+                            customerMap[cleanPhone] = {
+                                phone: phone,
+                                name: registeredProfile.fullName,
+                                email: registeredProfile.email,
+                                totalAmount: 0,
+                                count: 0,
+                                lastTimestamp: tx.transactionDate || tx.timestamp || "Recent"
+                            };
+                        }
+
+                        customerMap[cleanPhone].totalAmount += amount;
+                        customerMap[cleanPhone].count += 1;
+                        customerMap[cleanPhone].lastTimestamp = tx.transactionDate || tx.timestamp || customerMap[cleanPhone].lastTimestamp;
+                    });
+
+                    const customers = Object.values(customerMap);
+                    let rowsHTML = "";
+
+                    customers.forEach((cust, index) => {
+                        rowsHTML += `
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="p-4 font-mono text-slate-500 text-xs">#${index + 1}</td>
+                                <td class="p-4 font-medium text-slate-200">${cust.name}</td>
+                                <td class="p-4 text-slate-300 font-mono text-xs">${cust.phone}</td>
+                                <td class="p-4 text-slate-400 text-xs">${cust.email}</td>
+                                <td class="p-4 font-mono font-semibold text-emerald-400">KES ${cust.totalAmount.toLocaleString()}</td>
+                                <td class="p-4 text-center">
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                                        ${cust.count}x
+                                    </span>
+                                </td>
+                                <td class="p-4 text-right text-slate-400 font-mono text-xs">${cust.lastTimestamp}</td>
+                            </tr>
+                        `;
+                    });
+
+                    tableBody.innerHTML = rowsHTML;
+
+                }, (error) => {
+                    console.error("Firestore Transaction Stream Error:", error);
+                    streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Stream Error</span>';
+                    tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-400">Error streaming transaction records from Firestore.</td></tr>`;
+                });
+
+            } catch (err) {
+                console.error("Initialization Error:", err);
+                streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Init Error</span>';
+                tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-400">Failed to load user records for matching. Check console.</td></tr>`;
+            }
         }
 
-        // Initialize UI components and live sync on load
         document.addEventListener("DOMContentLoaded", () => {
             lucide.createIcons();
             initCustomerSync();
