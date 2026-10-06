@@ -4,16 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlinknPay - Customer Transactions Ledger</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Firebase App (Core) SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <!-- Firebase Firestore SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <!-- Firebase Realtime Database SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex">
 
@@ -62,22 +56,20 @@
 
     <!-- Main Content Area -->
     <main class="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen">
-        <!-- Top Header -->
         <header class="h-16 border-b border-slate-800 bg-slate-900/50 backdrop-blur px-8 flex items-center justify-between sticky top-0 z-10">
             <h2 class="text-lg font-semibold text-slate-200">Customer Payment Ledger</h2>
             <div id="stream-status" class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center space-x-2">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Connecting to Firebase...</span>
+                <span>Connecting...</span>
             </div>
         </header>
 
-        <!-- Content Body -->
         <div class="p-8 max-w-7xl w-full mx-auto space-y-6 pb-16">
             <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
                 <div class="p-6 border-b border-slate-800 flex justify-between items-center">
                     <div>
                         <h3 class="font-semibold text-slate-200">Recent Payment Activities</h3>
-                        <p class="text-xs text-slate-400">Synced across Firestore and Realtime Database (blinknpay)</p>
+                        <p class="text-xs text-slate-400">Direct Firestore Stream (blinknpay)</p>
                     </div>
                 </div>
 
@@ -96,7 +88,7 @@
                         </thead>
                         <tbody id="customer-table-body" class="divide-y divide-slate-800 text-sm">
                             <tr>
-                                <td colspan="7" class="p-8 text-center text-slate-500">Connecting to Firebase blinknpay stream...</td>
+                                <td colspan="7" class="p-8 text-center text-slate-500">Initializing Firestore listener...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -105,7 +97,6 @@
         </div>
     </main>
 
-    <!-- Firebase Configuration & Sync Script -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBuUTCdsv83R8EgSSLUKtiWhCMpiJuRjto",
@@ -123,123 +114,70 @@
         }
         
         const db = firebase.firestore();
-        const rtdb = firebase.database();
+        const statusEl = document.getElementById("stream-status");
+        const tbodyEl = document.getElementById("customer-table-body");
 
-        async function initCustomerSync() {
-            const streamStatus = document.getElementById("stream-status");
-            const tableBody = document.getElementById("customer-table-body");
+        // Immediately listen to transactions collection
+        db.collection("transactions").onSnapshot((snapshot) => {
+            statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Live Connected</span>';
 
-            try {
-                // 1. Fetch registered users from Firestore to match names and emails
-                const usersSnapshot = await db.collection("users").get();
-                const userDirectory = {};
-                usersSnapshot.forEach(doc => {
-                    const u = doc.data();
-                    const phone = (u.phone || "").trim();
-                    if (phone) {
-                        userDirectory[phone] = {
-                            fullName: u.fullName || "Registered User",
-                            email: u.email || "No Email Provided"
-                        };
-                    }
-                });
+            if (snapshot.empty) {
+                tbodyEl.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">Connected successfully, but no documents found in collection 'transactions'.</td></tr>`;
+                return;
+            }
 
-                // Helper function to render transactions on screen
-                function renderLedger(transactionsList) {
-                    streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Live Stream Active</span>';
+            const customerMap = {};
 
-                    if (transactionsList.length === 0) {
-                        tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">No transactions found in Firestore or Realtime Database.</td></tr>`;
-                        return;
-                    }
+            snapshot.forEach((doc) => {
+                const tx = doc.data();
+                const phone = tx.phoneNumber || tx.phone || tx.customerPhone || "N/A";
+                const cleanPhone = String(phone).trim();
+                const amount = Number(tx.amount || tx.paidAmount || 0);
 
-                    const customerMap = {};
-
-                    transactionsList.forEach((tx) => {
-                        const phone = tx.phoneNumber || tx.phone || tx.customerPhone || "Unknown Phone";
-                        const cleanPhone = phone.trim();
-                        const amount = Number(tx.amount || tx.paidAmount || 0);
-                        
-                        const registeredProfile = userDirectory[cleanPhone] || {
-                            fullName: tx.customerName || tx.name || "Unregistered Guest",
-                            email: "N/A (Guest)"
-                        };
-
-                        if (!customerMap[cleanPhone]) {
-                            customerMap[cleanPhone] = {
-                                phone: phone,
-                                name: registeredProfile.fullName,
-                                email: registeredProfile.email,
-                                totalAmount: 0,
-                                count: 0,
-                                lastTimestamp: tx.transactionDate || tx.timestamp || tx.createdAt || "Recent"
-                            };
-                        }
-
-                        customerMap[cleanPhone].totalAmount += amount;
-                        customerMap[cleanPhone].count += 1;
-                    });
-
-                    const customers = Object.values(customerMap);
-                    let rowsHTML = "";
-
-                    customers.forEach((cust, index) => {
-                        rowsHTML += `
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="p-4 font-mono text-slate-500 text-xs">#${index + 1}</td>
-                                <td class="p-4 font-medium text-slate-200">${cust.name}</td>
-                                <td class="p-4 text-slate-300 font-mono text-xs">${cust.phone}</td>
-                                <td class="p-4 text-slate-400 text-xs">${cust.email}</td>
-                                <td class="p-4 font-mono font-semibold text-emerald-400">KES ${cust.totalAmount.toLocaleString()}</td>
-                                <td class="p-4 text-center">
-                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                                        ${cust.count}x
-                                    </span>
-                                </td>
-                                <td class="p-4 text-right text-slate-400 font-mono text-xs">${cust.lastTimestamp}</td>
-                            </tr>
-                        `;
-                    });
-
-                    tableBody.innerHTML = rowsHTML;
+                if (!customerMap[cleanPhone]) {
+                    customerMap[cleanPhone] = {
+                        phone: cleanPhone,
+                        name: tx.customerName || tx.name || "Guest Customer",
+                        email: tx.email || "N/A",
+                        totalAmount: 0,
+                        count: 0,
+                        lastTimestamp: tx.transactionDate || tx.timestamp || tx.createdAt || "Just now"
+                    };
                 }
 
-                // 2. Listen to Firestore 'transactions' collection
-                db.collection("transactions").onSnapshot((firestoreSnapshot) => {
-                    let allTxs = [];
-                    firestoreSnapshot.forEach(doc => {
-                        allTxs.push(doc.data());
-                    });
+                customerMap[cleanPhone].totalAmount += amount;
+                customerMap[cleanPhone].count += 1;
+            });
 
-                    // Also check Realtime Database 'transactions' node just in case it's stored there
-                    rtdb.ref("transactions").on("value", (rtdbSnapshot) => {
-                        const rtdbData = rtdbSnapshot.val();
-                        if (rtdbData) {
-                            Object.values(rtdbData).forEach(tx => {
-                                allTxs.push(tx);
-                            });
-                        }
-                        renderLedger(allTxs);
-                    }, () => {
-                        // If RTDB errors or isn't used, just render what we got from Firestore
-                        renderLedger(allTxs);
-                    });
+            let rows = "";
+            Object.values(customerMap).forEach((cust, index) => {
+                rows += `
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="p-4 font-mono text-slate-500 text-xs">#${index + 1}</td>
+                        <td class="p-4 font-medium text-slate-200">${cust.name}</td>
+                        <td class="p-4 text-slate-300 font-mono text-xs">${cust.phone}</td>
+                        <td class="p-4 text-slate-400 text-xs">${cust.email}</td>
+                        <td class="p-4 font-mono font-semibold text-emerald-400">KES ${cust.totalAmount.toLocaleString()}</td>
+                        <td class="p-4 text-center">
+                            <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                                ${cust.count}x
+                            </span>
+                        </td>
+                        <td class="p-4 text-right text-slate-400 font-mono text-xs">${cust.lastTimestamp}</td>
+                    </tr>
+                `;
+            });
 
-                }, (error) => {
-                    console.error("Firestore Error:", error);
-                    streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Stream Error</span>';
-                    tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-400">Error connecting to Firestore 'transactions' collection. Verify collection name in Firebase console.</td></tr>`;
-                });
+            tbodyEl.innerHTML = rows;
 
-            } catch (err) {
-                console.error("Setup Error:", err);
-                streamStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Setup Error</span>';
-            }
-        }
+        }, (error) => {
+            console.error("Firestore Error:", error);
+            statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Connection Failed</span>';
+            tbodyEl.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-400">Error: ${error.message}</td></tr>`;
+        });
 
         document.addEventListener("DOMContentLoaded", () => {
             lucide.createIcons();
-            initCustomerSync();
         });
     </script>
 </body>
