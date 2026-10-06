@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlinknPay - System & API Settings</title>
+    <title>BlinknPay - System & App Settings</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -64,8 +64,8 @@
         <!-- Top Header -->
         <header class="h-20 bg-slate-900/50 backdrop-blur border-b border-slate-800 px-8 flex items-center justify-between sticky top-0 z-10">
             <div>
-                <h1 class="text-xl font-bold">System & API Settings</h1>
-                <p class="text-xs text-slate-400">Manage secure environment bindings, webhook hooks, RPID TTL intervals, and admin permissions</p>
+                <h1 class="text-xl font-bold">System & App Settings</h1>
+                <p class="text-xs text-slate-400">Manage proximity channel parameters, RPID TTL timing, and operational preferences</p>
             </div>
             <div class="flex items-center space-x-3">
                 <button onclick="alert('Configuration settings successfully synchronized!')" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition flex items-center space-x-2 shadow-lg shadow-indigo-600/20">
@@ -155,81 +155,50 @@
                 </div>
             </div>
 
-            <!-- Section 2: Firebase Credentials & Cloud Functions -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl p-6 space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
-                            <i data-lucide="database" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-base">Firebase Credentials & Cloud Functions</h3>
-                            <p class="text-xs text-slate-400">Configure secure environment bindings and masked runtime targets</p>
-                        </div>
-                    </div>
-                    <span class="text-xs bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-3 py-1 rounded-full font-mono">Firestore Connected</span>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-mono text-slate-400 mb-1">Firebase Project ID Binding</label>
-                            <input type="text" value="••••••••••••••••••••" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-500 focus:outline-none font-mono cursor-not-allowed">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-mono text-slate-400 mb-1">Web API Key Secret</label>
-                            <input type="password" value="••••••••••••••••••••••••••••••••" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-500 focus:outline-none font-mono cursor-not-allowed">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-mono text-slate-400 mb-1">Cloud Functions Gateway Routing</label>
-                        <input type="text" value="https://[masked-region]-[masked-project].cloudfunctions.net/api" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-500 focus:outline-none font-mono cursor-not-allowed">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 3: Webhook Endpoints & Subscriptions -->
+            <!-- Section 2: General System App Preferences -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl p-6 space-y-6">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-                            <i data-lucide="webhook" class="w-5 h-5"></i>
+                            <i data-lucide="sliders" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-base">Webhook Endpoints & Event Subscriptions</h3>
-                            <p class="text-xs text-slate-400">Manage obfuscated payload destinations for real-time transactional hooks</p>
+                            <h3 class="font-bold text-base">Application & Terminal Preferences</h3>
+                            <p class="text-xs text-slate-400">Configure localized display units, timeout defaults, and general client rules</p>
                         </div>
                     </div>
-                    <button class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg transition">Add Endpoint</button>
+                    <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full font-mono">Preferences Active</span>
                 </div>
 
-                <div class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-xs font-mono text-slate-400 mb-1">Primary Transactional Dispatch Hook</label>
-                        <input type="text" value="https://api.blinknpay.co.ke/vX/webhooks/secured-gateway" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-500 focus:outline-none font-mono cursor-not-allowed">
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Default Settlement Currency</label>
+                        <select class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono">
+                            <option value="KES">KES - Kenyan Shilling</option>
+                            <option value="USD">USD - US Dollar</option>
+                        </select>
                     </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-                        <label class="flex items-center space-x-2 text-xs text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800 cursor-pointer">
-                            <input type="checkbox" checked class="rounded border-slate-700 text-indigo-600 focus:ring-0">
-                            <span>charge.completed</span>
-                        </label>
-                        <label class="flex items-center space-x-2 text-xs text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800 cursor-pointer">
-                            <input type="checkbox" checked class="rounded border-slate-700 text-indigo-600 focus:ring-0">
-                            <span>rpid.rotated</span>
-                        </label>
-                        <label class="flex items-center space-x-2 text-xs text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800 cursor-pointer">
-                            <input type="checkbox" checked class="rounded border-slate-700 text-indigo-600 focus:ring-0">
-                            <span>dispute.opened</span>
-                        </label>
-                        <label class="flex items-center space-x-2 text-xs text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800 cursor-pointer">
-                            <input type="checkbox" class="rounded border-slate-700 text-indigo-600 focus:ring-0">
-                            <span>wallet.credited</span>
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Terminal Screen Timeout (Minutes)</label>
+                        <input type="number" value="5" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono">
+                    </div>
+                </div>
+
+                <div class="pt-2 space-y-3">
+                    <div class="flex items-center justify-between bg-slate-950/60 border border-slate-800 p-4 rounded-xl">
+                        <div class="space-y-1">
+                            <div class="text-sm font-medium text-slate-200">Audio Feedback Chimes on Successful Payment</div>
+                            <div class="text-xs text-slate-500">Play confirmation tone on mobile client/terminal upon handshake settlement</div>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                         </label>
                     </div>
                 </div>
             </div>
 
-            <!-- Section 4: Admin User Permissions & Security Controls -->
+            <!-- Section 3: Admin User Permissions & Security Controls -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl p-6 space-y-6">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                     <div class="flex items-center space-x-3">
