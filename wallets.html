@@ -11,6 +11,66 @@
     <!-- Firebase App & Firestore SDKs (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- GLOBAL QUANTUM WHITE OVERRIDES (Keeps Sidebar Dark, Turns Main Screen Clean White) -->
+    <style>
+        body {
+            background-color: #f8fafc !important; /* bg-slate-50 */
+            color: #0f172a !important;         /* text-slate-900 */
+        }
+        main {
+            background-color: #f8fafc !important;
+        }
+        main header {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            border-bottom-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+        main header h1 {
+            color: #0f172a !important;
+        }
+        main header p {
+            color: #64748b !important;
+        }
+        /* Cards & Containers */
+        main .bg-slate-900 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+        main .text-slate-400, main .text-slate-500 {
+            color: #64748b !important;
+        }
+        main .text-slate-200, main .text-slate-300, main .text-white {
+            color: #0f172a !important;
+        }
+        /* Tables & Expandable Rows */
+        main table thead tr {
+            background-color: #f1f5f9 !important;
+            border-bottom-color: #e2e8f0 !important;
+        }
+        main table th {
+            color: #475569 !important;
+        }
+        main table tbody tr {
+            border-bottom-color: #f1f5f9 !important;
+        }
+        main table tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+        main input[type="text"] {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        main input[type="text"]::placeholder {
+            color: #94a3b8 !important;
+        }
+        .detail-drawer-bg {
+            background-color: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+    </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col md:flex-row">
 
@@ -28,8 +88,8 @@
     <!-- Mobile Drawer Overlay -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 hidden md:hidden"></div>
 
-    <!-- Sidebar Navigation (Adaptive for Mobile Drawer & Desktop Sticky) -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between z-50 transform -translate-x-full md:translate-x-0 md:static transition-transform duration-300 ease-in-out">
+    <!-- Sidebar Navigation (Maintains Dark Theme) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between z-50 transform -translate-x-full md:translate-x-0 md:static transition-transform duration-300 ease-in-out shrink-0">
         <div class="p-6">
             <div class="flex items-center justify-between mb-8">
                 <div class="hidden md:flex items-center space-x-3">
@@ -50,9 +110,13 @@
                     <i data-lucide="store" class="w-5 h-5"></i>
                     <span>Merchants</span>
                 </a>
+                <a href="user.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="user-check" class="w-5 h-5"></i>
+                    <span>Registered Users</span>
+                </a>
                 <a href="customer.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
                     <i data-lucide="users" class="w-5 h-5"></i>
-                    <span>Customers</span>
+                    <span>Users Sessions</span>
                 </a>
                 <a href="rpids.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
                     <i data-lucide="radio" class="w-5 h-5"></i>
@@ -62,24 +126,40 @@
                     <i data-lucide="wallet" class="w-5 h-5"></i>
                     <span>Wallet Ledgers</span>
                 </a>
+                <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="node.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="cpu" class="w-5 h-5"></i>
+                    <span>Hardware Nodes</span>
+                </a>
+                <a href="disputes.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                    <span>Disputes</span>
+                </a>
+                <a href="settings.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span>Settings</span>
+                </a>
             </nav>
         </div>
         <div class="p-6 border-t border-slate-800 text-xs text-slate-500 flex items-center justify-between">
-            <span>Ledger Sync Live</span>
+            <span class="text-slate-400">Ledger Sync Live</span>
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         </div>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Main Content Area (Quantum White Theme) -->
     <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
         <!-- Desktop Header -->
-        <header class="hidden md:flex h-20 bg-slate-900/50 backdrop-blur border-b border-slate-800 px-8 items-center justify-between sticky top-0 z-20">
+        <header class="hidden md:flex h-20 bg-white/90 backdrop-blur border-b border-slate-200 px-8 items-center justify-between sticky top-0 z-20">
             <div>
-                <h1 class="text-xl font-bold">Wallet Liquidity & Ledgers</h1>
-                <p class="text-xs text-slate-400">Real-time tracking of platform liquidity, deposits, and transaction entries</p>
+                <h1 class="text-xl font-bold text-slate-900">Wallet Liquidity & Ledgers</h1>
+                <p class="text-xs text-slate-500">Real-time tracking of platform liquidity, deposits, and customer payment sessions</p>
             </div>
-            <div class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <div class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>Firestore Ledger Connected</span>
             </div>
         </header>
@@ -89,50 +169,50 @@
             
             <!-- Liquidity Overview Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
-                    <p class="text-sm text-slate-400">Total System Liquidity</p>
-                    <h3 class="text-2xl sm:text-3xl font-bold mt-2 text-emerald-400 font-mono" id="total-liquidity">KES 0.00</h3>
-                    <span class="text-xs text-slate-500 mt-2 inline-block">Sum across active user and merchant wallets</span>
+                <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-500">Total System Liquidity</p>
+                    <h3 class="text-2xl sm:text-3xl font-bold mt-2 text-emerald-600 font-mono" id="total-liquidity">KES 0.00</h3>
+                    <span class="text-xs text-slate-400 mt-2 inline-block">Sum across active user and merchant wallets</span>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
-                    <p class="text-sm text-slate-400">Total Volume Transacted</p>
-                    <h3 class="text-2xl sm:text-3xl font-bold mt-2 text-indigo-400 font-mono" id="total-volume">KES 0.00</h3>
-                    <span class="text-xs text-emerald-400 mt-2 inline-block">Real-time ledger processing</span>
+                <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-500">Total Volume Transacted</p>
+                    <h3 class="text-2xl sm:text-3xl font-bold mt-2 text-indigo-600 font-mono" id="total-volume">KES 0.00</h3>
+                    <span class="text-xs text-emerald-600 mt-2 inline-block">Real-time ledger processing</span>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
-                    <p class="text-sm text-slate-400">Pending Settlement Queue</p>
-                    <h3 class="text-2xl sm:text-3xl font-bold mt-2 text-amber-400 font-mono">KES 0.00</h3>
-                    <span class="text-xs text-slate-500 mt-2 inline-block">Instant automated clearance</span>
+                <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+                    <p class="text-sm text-slate-500">Pending Settlement Queue</p>
+                    <h3 class="text-2xl sm:text-3xl font-bold mt-2 text-amber-600 font-mono">KES 0.00</h3>
+                    <span class="text-xs text-slate-400 mt-2 inline-block">Instant automated clearance</span>
                 </div>
             </div>
 
-            <!-- Transaction Ledger Table Container -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-                <div class="p-6 border-b border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <!-- Customer Payment Sessions Clustered Table Container -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <div class="p-6 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                        <h3 class="text-lg font-bold">Recent Transaction Ledger</h3>
-                        <p class="text-xs text-slate-400">Streaming real-time ledger entries from proximity transfers</p>
+                        <h3 class="text-lg font-bold text-slate-900">Customer Payment Sessions Ledger</h3>
+                        <p class="text-xs text-slate-500">Clustered transactions cross-referenced with registered user profiles (`users` collection). Click any row to expand history.</p>
                     </div>
                     <!-- Search Filter Input -->
                     <div class="w-full sm:w-auto">
-                        <input type="text" id="ledger-search-input" placeholder="Search sender, recipient or ID..." class="w-full sm:w-64 bg-slate-950 border border-slate-800 text-sm rounded-xl px-4 py-2 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                        <input type="text" id="ledger-search-input" placeholder="Search customer name or phone..." class="w-full sm:w-64 bg-white border border-slate-300 text-sm rounded-xl px-4 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500">
                     </div>
                 </div>
 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="border-b border-slate-800 text-xs uppercase tracking-wider text-slate-400 bg-slate-950/50">
-                                <th class="p-4 font-semibold">Transaction ID / Channel</th>
-                                <th class="p-4 font-semibold">Sender / Source</th>
-                                <th class="p-4 font-semibold">Recipient / Merchant</th>
-                                <th class="p-4 font-semibold">Status</th>
-                                <th class="p-4 font-semibold text-right">Amount</th>
+                            <tr class="border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 bg-slate-50">
+                                <th class="p-4 font-semibold w-16">#</th>
+                                <th class="p-4 font-semibold">Customer Name</th>
+                                <th class="p-4 font-semibold">Phone Number / Identifier</th>
+                                <th class="p-4 font-semibold text-center">Payment Count</th>
+                                <th class="p-4 font-semibold text-right">Total Amount Paid</th>
                             </tr>
                         </thead>
-                        <tbody id="ledger-table-body" class="divide-y divide-slate-800 text-sm">
+                        <tbody id="ledger-table-body" class="divide-y divide-slate-100 text-sm">
                             <tr>
-                                <td colspan="5" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore ledger stream...</td>
+                                <td colspan="5" class="p-8 text-center text-slate-400">Connecting to Firebase Firestore ledger stream...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -145,7 +225,9 @@
     <!-- Application Logic & Firebase Synchronization Script -->
     <script>
         // Initialize Lucide icons
-        lucide.createIcons();
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
 
         // Mobile Sidebar Drawer Toggle Control
         const sidebar = document.getElementById('sidebar');
@@ -164,7 +246,7 @@
 
         // Live Firebase Web Configuration Credentials
         const firebaseConfig = {
-            apiKey: "AIzaSyBuUTCdsv83R8EgSSLUKTiWhCMpiJuRjto",
+            apiKey: "AIzaSyBuUTCdsv83R8EgSSLUKtiWhCMpiJuRjto",
             authDomain: "blinknpay.firebaseapp.com",
             databaseURL: "https://blinknpay-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "blinknpay",
@@ -179,66 +261,154 @@
         }
         const db = firebase.firestore();
 
-        let allTransactionsData = [];
+        let clusteredCustomerData = [];
 
-        // Real-time listener for 'transactions' collection
-        db.collection("transactions").onSnapshot((snapshot) => {
-            allTransactionsData = [];
-            snapshot.forEach((doc) => {
-                allTransactionsData.push({ id: doc.id, ...doc.data() });
-            });
+        // Helper function to normalize phone numbers for matching
+        function normalizePhone(phoneStr) {
+            if (!phoneStr) return "";
+            return String(phoneStr).replace(/\s+/g, '').replace(/^\+/, '');
+        }
 
-            renderLedgerTable(allTransactionsData);
-        }, (error) => {
-            console.error("Error fetching transactions:", error);
-            document.getElementById("ledger-table-body").innerHTML = `
-                <tr><td colspan="5" class="p-8 text-center text-rose-500">Error connecting to ledger stream. Check Firestore rules.</td></tr>
-            `;
-        });
+        // Initialize and listen to users and transactions simultaneously
+        async function initLedger() {
+            try {
+                // 1. Fetch registered users directory
+                const userDirectory = {};
+                const usersSnap = await db.collection("users").get();
+                usersSnap.forEach(doc => {
+                    const u = doc.data();
+                    const phoneKey = normalizePhone(u.phone);
+                    if (phoneKey) {
+                        userDirectory[phoneKey] = u.fullName || u.name;
+                    }
+                });
+
+                // 2. Real-time listener for 'transactions' collection
+                db.collection("transactions").onSnapshot((snapshot) => {
+                    const customerMap = {};
+                    let totalVol = 0;
+
+                    snapshot.forEach((doc) => {
+                        const tx = doc.data();
+                        const amount = Number(tx.amount || tx.paidAmount || 0);
+                        totalVol += amount;
+
+                        const rawPhone = tx.phoneNumber || tx.phone || tx.customerPhone || "N/A";
+                        const cleanPhone = String(rawPhone).trim();
+                        const lookupKey = normalizePhone(cleanPhone);
+
+                        // Resolve real user name
+                        let resolvedName = tx.customerName || tx.name;
+                        if (userDirectory[lookupKey]) {
+                            resolvedName = userDirectory[lookupKey];
+                        }
+                        if (!resolvedName || resolvedName.toLowerCase().includes("guest") || resolvedName.toLowerCase().includes("blinknpay")) {
+                            resolvedName = cleanPhone !== "N/A" ? `Customer (${cleanPhone})` : "Registered Customer";
+                        }
+
+                        if (!customerMap[cleanPhone]) {
+                            customerMap[cleanPhone] = {
+                                customerName: resolvedName,
+                                phone: cleanPhone,
+                                totalAmount: 0,
+                                count: 0,
+                                transactions: []
+                            };
+                        }
+
+                        customerMap[cleanPhone].totalAmount += amount;
+                        customerMap[cleanPhone].count += 1;
+                        customerMap[cleanPhone].transactions.push({
+                            id: doc.id,
+                            amount: amount,
+                            merchant: tx.recipientName || tx.merchantName || tx.merchantId || "General Merchant",
+                            channel: tx.channel || "BLE / Ultrasound",
+                            status: tx.status || "completed",
+                            date: tx.transactionDate || tx.timestamp || tx.createdAt || "Recent"
+                        });
+                    });
+
+                    clusteredCustomerData = Object.values(customerMap);
+                    renderLedgerTable(clusteredCustomerData);
+                    document.getElementById("total-volume").textContent = `KES ${totalVol.toLocaleString()}`;
+
+                }, (error) => {
+                    console.error("Error fetching transactions:", error);
+                    document.getElementById("ledger-table-body").innerHTML = `
+                        <tr><td colspan="5" class="p-8 text-center text-rose-600">Error connecting to ledger stream. Check Firestore rules.</td></tr>
+                    `;
+                });
+
+            } catch (err) {
+                console.error("Initialization error:", err);
+            }
+        }
 
         function renderLedgerTable(dataArray) {
-            let rowsHTML = "";
-            let totalVol = 0;
+            const tbody = document.getElementById("ledger-table-body");
+            tbody.innerHTML = "";
 
             if (dataArray.length === 0) {
-                document.getElementById("ledger-table-body").innerHTML = `
-                    <tr><td colspan="5" class="p-8 text-center text-slate-500">No transaction records found in ledger.</td></tr>
-                `;
-                document.getElementById("total-volume").textContent = "KES 0.00";
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">No transaction records found in ledger.</td></tr>`;
                 return;
             }
 
-            dataArray.forEach((data) => {
-                const amount = Number(data.amount) || 0;
-                totalVol += amount;
-
-                const statusBadge = (data.status === "completed" || data.status === "success")
-                    ? `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Completed</span>`
-                    : `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">Processing</span>`;
-
-                const shortId = data.id.substring(0, 10) + "...";
-                const channelName = data.channel || "BLE / Ultrasound";
-                const sender = data.senderName || data.senderId || "Customer";
-                const recipient = data.recipientName || data.merchantId || "Merchant";
-
-                rowsHTML += `
-                    <tr class="hover:bg-slate-800/50 transition">
-                        <td class="p-4 font-mono text-xs">
-                            <div class="text-slate-200">${shortId}</div>
-                            <div class="text-indigo-400">${channelName}</div>
-                        </td>
-                        <td class="p-4 text-slate-300">${sender}</td>
-                        <td class="p-4 text-slate-300">${recipient}</td>
-                        <td class="p-4">${statusBadge}</td>
-                        <td class="p-4 text-right font-mono font-semibold text-emerald-400">
-                            KES ${amount.toLocaleString()}
-                        </td>
-                    </tr>
+            dataArray.forEach((cust, index) => {
+                // Main summary row
+                const row = document.createElement('tr');
+                row.className = "hover:bg-slate-50 cursor-pointer transition";
+                row.innerHTML = `
+                    <td class="p-4 font-mono text-slate-400 text-xs">#${index + 1}</td>
+                    <td class="p-4 font-bold text-slate-900">${cust.customerName}</td>
+                    <td class="p-4 text-slate-600 font-mono text-xs">${cust.phone}</td>
+                    <td class="p-4 text-center">
+                        <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                            ${cust.count} payments
+                        </span>
+                    </td>
+                    <td class="p-4 text-right font-mono font-semibold text-emerald-600">
+                        KES ${cust.totalAmount.toLocaleString()}
+                    </td>
                 `;
-            });
 
-            document.getElementById("ledger-table-body").innerHTML = rowsHTML;
-            document.getElementById("total-volume").textContent = `KES ${totalVol.toLocaleString()}`;
+                // Expandable detailed breakdown row showing all transactions and merchant destinations
+                const detailRow = document.createElement('tr');
+                detailRow.className = "hidden bg-slate-50 border-t border-b border-slate-200";
+                
+                let txListHTML = '';
+                cust.transactions.forEach((tx, txIdx) => {
+                    txListHTML += `
+                        <div class="flex items-center justify-between py-2 border-b border-slate-200 last:border-none text-xs font-mono">
+                            <div>
+                                <span class="font-bold text-slate-900">#${txIdx + 1} • KES ${tx.amount.toLocaleString()}</span> 
+                                <span class="text-slate-500 block">Paid to Merchant: <strong class="text-indigo-600">${tx.merchant}</strong></span>
+                            </div>
+                            <div class="text-right">
+                                <span class="px-2 py-0.5 rounded text-[10px] bg-cyan-50 text-cyan-700 border border-cyan-200">${tx.channel}</span>
+                                <span class="text-slate-400 block mt-0.5">${tx.date}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                detailRow.innerHTML = `
+                    <td colspan="5" class="p-4 sm:p-6">
+                        <div class="detail-drawer-bg p-4 rounded-xl shadow-sm space-y-3">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Payment Session History for ${cust.customerName} (${cust.phone})</h4>
+                            <div class="space-y-1">
+                                ${txListHTML}
+                            </div>
+                        </div>
+                    </td>
+                `;
+
+                row.addEventListener('click', () => {
+                    detailRow.classList.toggle('hidden');
+                });
+
+                tbody.appendChild(row);
+                tbody.appendChild(detailRow);
+            });
         }
 
         // Search filter functionality
@@ -246,17 +416,16 @@
         if (searchInput) {
             searchInput.addEventListener("input", (e) => {
                 const query = e.target.value.toLowerCase();
-                const filtered = allTransactionsData.filter(item => {
-                    const id = item.id.toLowerCase();
-                    const sender = (item.senderName || item.senderId || "").toLowerCase();
-                    const recipient = (item.recipientName || item.merchantId || "").toLowerCase();
-                    return id.includes(query) || sender.includes(query) || recipient.includes(query);
+                const filtered = clusteredCustomerData.filter(item => {
+                    const name = (item.customerName || "").toLowerCase();
+                    const phone = (item.phone || "").toLowerCase();
+                    return name.includes(query) || phone.includes(query);
                 });
                 renderLedgerTable(filtered);
             });
         }
 
-        // Calculate aggregate liquidity from customers & merchants collections
+        // Calculate aggregate system liquidity from customers & merchants collections
         let customerLiquidity = 0;
         let merchantLiquidity = 0;
 
@@ -285,6 +454,9 @@
             });
             updateSystemLiquidity();
         });
+
+        // Run ledger initialization on load
+        initLedger();
     </script>
 </body>
 </html>
