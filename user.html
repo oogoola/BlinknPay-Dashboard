@@ -8,11 +8,64 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- GLOBAL QUANTUM WHITE OVERRIDES (Keeps Sidebar Dark, Turns Main Screen Clean White) -->
+    <style>
+        body {
+            background-color: #f8fafc !important; /* bg-slate-50 */
+            color: #0f172a !important;         /* text-slate-900 */
+        }
+        main {
+            background-color: #f8fafc !important;
+        }
+        main header {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            border-bottom-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+        main header h1 {
+            color: #0f172a !important;
+        }
+        main header p {
+            color: #64748b !important;
+        }
+        /* Content & Table Containers */
+        main .bg-slate-900 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+        main .text-slate-400, main .text-slate-500 {
+            color: #64748b !important;
+        }
+        main .text-white, main .text-slate-200, main .text-slate-300 {
+            color: #0f172a !important;
+        }
+        /* Table Elements & Expandable Row Overrides */
+        main table thead tr {
+            background-color: #f1f5f9 !important;
+            border-bottom-color: #e2e8f0 !important;
+        }
+        main table th {
+            color: #475569 !important;
+        }
+        main table tbody tr {
+            border-bottom-color: #f1f5f9 !important;
+        }
+        main table tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+        /* Expandable detail card background inside Quantum White */
+        .detail-drawer-bg {
+            background-color: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+    </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex">
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+    <!-- Sidebar Navigation (Maintains Dark Theme) -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex shrink-0">
         <div class="p-6">
             <div class="flex items-center space-x-3 mb-8">
                 <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg text-white">BP</div>
@@ -64,24 +117,24 @@
         </div>
         <div class="p-6 border-t border-slate-800">
             <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-sm font-semibold">EM</div>
+                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-sm font-semibold text-slate-200">EM</div>
                 <div>
-                    <p class="text-sm font-medium">Admin Portal</p>
+                    <p class="text-sm font-medium text-slate-200">Admin Portal</p>
                     <p class="text-xs text-slate-500">Node Cluster Active</p>
                 </div>
             </div>
         </div>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Main Content Area (Quantum White Theme) -->
     <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
         <!-- Top Header -->
-        <header class="h-20 bg-slate-900/50 backdrop-blur border-b border-slate-800 px-6 sm:px-8 flex items-center justify-between sticky top-0 z-10">
+        <header class="h-20 bg-white/90 backdrop-blur border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between sticky top-0 z-10">
             <div>
-                <h1 class="text-lg sm:text-xl font-bold">Registered Customers</h1>
-                <p class="text-xs text-slate-400">Live records synced directly from Android app sign-ups (`users/{uid}`)</p>
+                <h1 class="text-lg sm:text-xl font-bold text-slate-900">Registered Customers</h1>
+                <p class="text-xs text-slate-500">Live records synced directly from Android app sign-ups (`users/{uid}`)</p>
             </div>
-            <div id="user-count" class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1.5 rounded-full text-xs font-semibold">
+            <div id="user-count" class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-full text-xs font-semibold">
                 Loading users...
             </div>
         </header>
@@ -89,11 +142,11 @@
         <!-- Dashboard Body -->
         <div class="p-4 sm:p-8 space-y-6">
             <!-- Main Table Container with Horizontal Scrolling for Mobile -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="border-b border-slate-800 text-xs uppercase tracking-wider text-slate-400 bg-slate-950/50">
+                            <tr class="border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 bg-slate-50">
                                 <th class="p-4 font-semibold">#</th>
                                 <th class="p-4 font-semibold">Full Name</th>
                                 <th class="p-4 font-semibold">Phone Number</th>
@@ -101,9 +154,9 @@
                                 <th class="p-4 font-semibold">Registered Date</th>
                             </tr>
                         </thead>
-                        <tbody id="user-table-body" class="divide-y divide-slate-800 text-sm">
+                        <tbody id="user-table-body" class="divide-y divide-slate-100 text-sm">
                             <tr>
-                                <td colspan="5" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore...</td>
+                                <td colspan="5" class="p-8 text-center text-slate-400">Connecting to Firebase Firestore...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -143,7 +196,7 @@
             userCountBadge.innerText = `${snapshot.size} Registered Users`;
 
             if (snapshot.empty) {
-                tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-500">No registered customers found.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">No registered customers found.</td></tr>`;
                 return;
             }
 
@@ -153,31 +206,31 @@
                 
                 const regDate = user.createdAt ? new Date(user.createdAt.seconds * 1000).toLocaleString() : "N/A";
                 const emailDisplay = user.email || "Not Provided";
-                const statusBadge = user.isActive ? '<span class="text-emerald-400 font-semibold">Active</span>' : '<span class="text-rose-400 font-semibold">Inactive</span>';
+                const statusBadge = user.isActive ? '<span class="text-emerald-600 font-semibold">Active</span>' : '<span class="text-rose-600 font-semibold">Inactive</span>';
 
                 // Main summary table row
                 const row = document.createElement('tr');
-                row.className = "hover:bg-slate-800/50 cursor-pointer transition";
+                row.className = "hover:bg-slate-50 cursor-pointer transition";
                 row.innerHTML = `
-                    <td class="p-4 whitespace-nowrap text-sm font-medium text-slate-400">${rank++}</td>
-                    <td class="p-4 whitespace-nowrap text-sm font-bold text-white">${user.fullName || 'N/A'}</td>
-                    <td class="p-4 whitespace-nowrap text-sm text-slate-300 font-mono">${user.phone || 'N/A'}</td>
-                    <td class="p-4 whitespace-nowrap text-sm text-indigo-400 font-mono">#${user.userNumber || 'N/A'}</td>
-                    <td class="p-4 whitespace-nowrap text-sm text-slate-400">${regDate}</td>
+                    <td class="p-4 whitespace-nowrap text-sm font-medium text-slate-500">${rank++}</td>
+                    <td class="p-4 whitespace-nowrap text-sm font-bold text-slate-900">${user.fullName || 'N/A'}</td>
+                    <td class="p-4 whitespace-nowrap text-sm text-slate-600 font-mono">${user.phone || 'N/A'}</td>
+                    <td class="p-4 whitespace-nowrap text-sm text-indigo-600 font-mono font-semibold">#${user.userNumber || 'N/A'}</td>
+                    <td class="p-4 whitespace-nowrap text-sm text-slate-500">${regDate}</td>
                 `;
 
                 // Expandable details hidden row
                 const detailRow = document.createElement('tr');
-                detailRow.className = "hidden bg-slate-950/80 border-t border-b border-slate-800";
+                detailRow.className = "hidden bg-slate-50 border-t border-b border-slate-200";
                 detailRow.innerHTML = `
                     <td colspan="5" class="p-4 sm:p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono text-slate-300 bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                            <div><strong class="text-slate-500 block uppercase mb-1">Firebase UID</strong> <span class="text-slate-200">${user.uid || 'N/A'}</span></div>
-                            <div><strong class="text-slate-500 block uppercase mb-1">Email Address</strong> <span class="text-slate-200">${emailDisplay}</span></div>
-                            <div><strong class="text-slate-500 block uppercase mb-1">Account Status</strong> ${statusBadge}</div>
-                            <div><strong class="text-slate-500 block uppercase mb-1">PIN Hash</strong> <span class="text-slate-400">${user.pinHash || 'N/A'}</span></div>
-                            <div><strong class="text-slate-500 block uppercase mb-1">Last Login</strong> <span class="text-slate-200">${user.lastLoginAt ? new Date(user.lastLoginAt.seconds * 1000).toLocaleString() : 'N/A'}</span></div>
-                            <div><strong class="text-slate-500 block uppercase mb-1">Profile Image</strong> ${user.profileImageUrl ? '<a href="'+user.profileImageUrl+'" target="_blank" class="text-indigo-400 underline">View Asset</a>' : 'None'}</div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono text-slate-700 detail-drawer-bg p-4 rounded-xl shadow-sm">
+                            <div><strong class="text-slate-400 block uppercase mb-1">Firebase UID</strong> <span class="text-slate-900">${user.uid || 'N/A'}</span></div>
+                            <div><strong class="text-slate-400 block uppercase mb-1">Email Address</strong> <span class="text-slate-900">${emailDisplay}</span></div>
+                            <div><strong class="text-slate-400 block uppercase mb-1">Account Status</strong> ${statusBadge}</div>
+                            <div><strong class="text-slate-400 block uppercase mb-1">PIN Hash</strong> <span class="text-slate-600">${user.pinHash || 'N/A'}</span></div>
+                            <div><strong class="text-slate-400 block uppercase mb-1">Last Login</strong> <span class="text-slate-900">${user.lastLoginAt ? new Date(user.lastLoginAt.seconds * 1000).toLocaleString() : 'N/A'}</span></div>
+                            <div><strong class="text-slate-400 block uppercase mb-1">Profile Image</strong> ${user.profileImageUrl ? '<a href="'+user.profileImageUrl+'" target="_blank" class="text-indigo-600 underline">View Asset</a>' : 'None'}</div>
                         </div>
                     </td>
                 `;
@@ -191,7 +244,7 @@
             });
         }, (error) => {
             console.error("Error fetching users: ", error);
-            tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-rose-400">Failed to load user data. Check Firestore security rules.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-rose-600">Failed to load user data. Check Firestore security rules.</td></tr>`;
         });
 
         window.addEventListener('DOMContentLoaded', () => {
