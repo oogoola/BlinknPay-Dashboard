@@ -8,16 +8,61 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- GLOBAL QUANTUM WHITE OVERRIDES (Keeps Sidebar Dark, Turns Main Screen Clean White) -->
+    <style>
+        body {
+            background-color: #f8fafc !important; /* bg-slate-50 */
+            color: #0f172a !important;         /* text-slate-900 */
+        }
+        main {
+            background-color: #f8fafc !important;
+        }
+        main header {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            border-bottom-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+        main header h2 {
+            color: #0f172a !important;
+        }
+        /* Content Cards */
+        main .bg-slate-900 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+        main .text-slate-400, main .text-slate-500 {
+            color: #64748b !important;
+        }
+        main .text-slate-200, main .text-slate-300 {
+            color: #0f172a !important;
+        }
+        /* Table Elements */
+        main table thead tr {
+            background-color: #f1f5f9 !important;
+            border-bottom-color: #e2e8f0 !important;
+        }
+        main table th {
+            color: #475569 !important;
+        }
+        main table tbody tr {
+            border-bottom-color: #f1f5f9 !important;
+        }
+        main table tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+    </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex">
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex sticky top-0 h-screen">
+    <!-- Sidebar Navigation (Maintains Dark Theme) -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex sticky top-0 h-screen shrink-0">
         <div class="p-6">
             <div class="flex items-center space-x-3 mb-8">
                 <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-lg text-white shadow-lg shadow-indigo-500/30">BP</div>
                 <div>
-                    <h1 class="font-bold tracking-tight">BlinknPay</h1>
+                    <h1 class="font-bold tracking-tight text-white">BlinknPay</h1>
                     <p class="text-xs text-slate-400">Customer Command Center</p>
                 </div>
             </div>
@@ -29,6 +74,10 @@
                 <a href="merchant.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition text-sm font-medium">
                     <i data-lucide="store" class="w-4 h-4"></i>
                     <span>Merchants</span>
+                </a>
+                <a href="user.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition text-sm font-medium">
+                    <i data-lucide="user-check" class="w-4 h-4"></i>
+                    <span>Registered Users</span>
                 </a>
                 <a href="customer.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 text-indigo-400 font-medium text-sm border border-indigo-500/20">
                     <i data-lucide="users" class="w-4 h-4"></i>
@@ -54,29 +103,29 @@
         </div>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Main Content Area (Quantum White Theme) -->
     <main class="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen">
-        <header class="h-16 border-b border-slate-800 bg-slate-900/50 backdrop-blur px-8 flex items-center justify-between sticky top-0 z-10">
-            <h2 class="text-lg font-semibold text-slate-200">Customer Payment Ledger</h2>
-            <div id="stream-status" class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center space-x-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <header class="h-16 border-b border-slate-200 bg-white/90 backdrop-blur px-8 flex items-center justify-between sticky top-0 z-10">
+            <h2 class="text-lg font-semibold text-slate-900">Customer Payment Ledger</h2>
+            <div id="stream-status" class="text-xs font-mono text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>Connecting...</span>
             </div>
         </header>
 
         <div class="p-8 max-w-7xl w-full mx-auto space-y-6 pb-16">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-                <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div class="p-6 border-b border-slate-200 flex justify-between items-center">
                     <div>
-                        <h3 class="font-semibold text-slate-200">Recent Payment Activities</h3>
-                        <p class="text-xs text-slate-400">Direct Firestore Stream (blinknpay)</p>
+                        <h3 class="font-semibold text-slate-900">Recent Payment Activities</h3>
+                        <p class="text-xs text-slate-500">Cross-referenced with registered user profiles (`users` collection)</p>
                     </div>
                 </div>
 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="border-b border-slate-800 text-xs uppercase tracking-wider text-slate-400 bg-slate-950/40">
+                            <tr class="border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 bg-slate-50">
                                 <th class="p-4 font-medium w-16">#</th>
                                 <th class="p-4 font-medium">Customer Name</th>
                                 <th class="p-4 font-medium">Phone Number</th>
@@ -86,9 +135,9 @@
                                 <th class="p-4 font-medium text-right">Last Paid Timestamp</th>
                             </tr>
                         </thead>
-                        <tbody id="customer-table-body" class="divide-y divide-slate-800 text-sm">
+                        <tbody id="customer-table-body" class="divide-y divide-slate-100 text-sm">
                             <tr>
-                                <td colspan="7" class="p-8 text-center text-slate-500">Initializing Firestore listener...</td>
+                                <td colspan="7" class="p-8 text-center text-slate-400">Initializing Firestore listener & fetching user profiles...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -117,67 +166,115 @@
         const statusEl = document.getElementById("stream-status");
         const tbodyEl = document.getElementById("customer-table-body");
 
-        // Immediately listen to transactions collection
-        db.collection("transactions").onSnapshot((snapshot) => {
-            statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Live Connected</span>';
+        // Helper function to clean and normalize phone numbers for accurate matching
+        function normalizePhone(phoneStr) {
+            if (!phoneStr) return "";
+            return String(phoneStr).replace(/\s+/g, '').replace(/^\+/, '');
+        }
 
-            if (snapshot.empty) {
-                tbodyEl.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">Connected successfully, but no documents found in collection 'transactions'.</td></tr>`;
-                return;
+        // Fetch user profiles from 'users' collection first, then stream transactions
+        async function initDashboard() {
+            try {
+                // 1. Build a lookup map of registered users by phone number
+                const userDirectory = {};
+                const usersSnap = await db.collection("users").get();
+                usersSnap.forEach(doc => {
+                    const u = doc.data();
+                    const phoneKey = normalizePhone(u.phone);
+                    if (phoneKey) {
+                        userDirectory[phoneKey] = {
+                            fullName: u.fullName || u.name,
+                            email: u.email
+                        };
+                    }
+                });
+
+                // 2. Real-time listener for the 'transactions' collection
+                db.collection("transactions").onSnapshot((snapshot) => {
+                    statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span>Live Connected</span>';
+
+                    if (snapshot.empty) {
+                        tbodyEl.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400">Connected successfully, but no documents found in collection 'transactions'.</td></tr>`;
+                        return;
+                    }
+
+                    const customerMap = {};
+
+                    snapshot.forEach((doc) => {
+                        const tx = doc.data();
+                        const rawPhone = tx.phoneNumber || tx.phone || tx.customerPhone || "N/A";
+                        const cleanPhone = String(rawPhone).trim();
+                        const lookupKey = normalizePhone(cleanPhone);
+                        const amount = Number(tx.amount || tx.paidAmount || 0);
+
+                        // Resolve true name and email from the registered user directory if available
+                        let resolvedName = tx.customerName || tx.name;
+                        let resolvedEmail = tx.email;
+
+                        if (userDirectory[lookupKey]) {
+                            if (!resolvedName || resolvedName.toLowerCase().includes("guest") || resolvedName.toLowerCase().includes("blinknpay")) {
+                                resolvedName = userDirectory[lookupKey].fullName;
+                            }
+                            if (!resolvedEmail || resolvedEmail === "N/A") {
+                                resolvedEmail = userDirectory[lookupKey].email;
+                            }
+                        }
+
+                        if (!resolvedName || resolvedName.toLowerCase().includes("guest")) {
+                            resolvedName = cleanPhone !== "N/A" ? `Customer (${cleanPhone})` : "Registered Customer";
+                        }
+
+                        if (!customerMap[cleanPhone]) {
+                            customerMap[cleanPhone] = {
+                                phone: cleanPhone,
+                                name: resolvedName,
+                                email: resolvedEmail || "Not Provided",
+                                totalAmount: 0,
+                                count: 0,
+                                lastTimestamp: tx.transactionDate || tx.timestamp || tx.createdAt || "Just now"
+                            };
+                        }
+
+                        customerMap[cleanPhone].totalAmount += amount;
+                        customerMap[cleanPhone].count += 1;
+                    });
+
+                    let rows = "";
+                    Object.values(customerMap).forEach((cust, index) => {
+                        rows += `
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-4 font-mono text-slate-400 text-xs">#${index + 1}</td>
+                                <td class="p-4 font-semibold text-slate-900">${cust.name}</td>
+                                <td class="p-4 text-slate-600 font-mono text-xs">${cust.phone}</td>
+                                <td class="p-4 text-slate-500 text-xs">${cust.email}</td>
+                                <td class="p-4 font-mono font-semibold text-emerald-600">KES ${cust.totalAmount.toLocaleString()}</td>
+                                <td class="p-4 text-center">
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                        ${cust.count}x
+                                    </span>
+                                </td>
+                                <td class="p-4 text-right text-slate-500 font-mono text-xs">${cust.lastTimestamp}</td>
+                            </tr>
+                        `;
+                    });
+
+                    tbodyEl.innerHTML = rows;
+
+                }, (error) => {
+                    console.error("Firestore Error:", error);
+                    statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Connection Failed</span>';
+                    tbodyEl.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-600">Error: ${error.message}</td></tr>`;
+                });
+
+            } catch (err) {
+                console.error("Initialization error:", err);
+                tbodyEl.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-600">Failed to load user records directory.</td></tr>`;
             }
-
-            const customerMap = {};
-
-            snapshot.forEach((doc) => {
-                const tx = doc.data();
-                const phone = tx.phoneNumber || tx.phone || tx.customerPhone || "N/A";
-                const cleanPhone = String(phone).trim();
-                const amount = Number(tx.amount || tx.paidAmount || 0);
-
-                if (!customerMap[cleanPhone]) {
-                    customerMap[cleanPhone] = {
-                        phone: cleanPhone,
-                        name: tx.customerName || tx.name || "Guest Customer",
-                        email: tx.email || "N/A",
-                        totalAmount: 0,
-                        count: 0,
-                        lastTimestamp: tx.transactionDate || tx.timestamp || tx.createdAt || "Just now"
-                    };
-                }
-
-                customerMap[cleanPhone].totalAmount += amount;
-                customerMap[cleanPhone].count += 1;
-            });
-
-            let rows = "";
-            Object.values(customerMap).forEach((cust, index) => {
-                rows += `
-                    <tr class="hover:bg-slate-800/50 transition">
-                        <td class="p-4 font-mono text-slate-500 text-xs">#${index + 1}</td>
-                        <td class="p-4 font-medium text-slate-200">${cust.name}</td>
-                        <td class="p-4 text-slate-300 font-mono text-xs">${cust.phone}</td>
-                        <td class="p-4 text-slate-400 text-xs">${cust.email}</td>
-                        <td class="p-4 font-mono font-semibold text-emerald-400">KES ${cust.totalAmount.toLocaleString()}</td>
-                        <td class="p-4 text-center">
-                            <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                                ${cust.count}x
-                            </span>
-                        </td>
-                        <td class="p-4 text-right text-slate-400 font-mono text-xs">${cust.lastTimestamp}</td>
-                    </tr>
-                `;
-            });
-
-            tbodyEl.innerHTML = rows;
-
-        }, (error) => {
-            console.error("Firestore Error:", error);
-            statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span>Connection Failed</span>';
-            tbodyEl.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-400">Error: ${error.message}</td></tr>`;
-        });
+        }
 
         document.addEventListener("DOMContentLoaded", () => {
             lucide.createIcons();
+            initDashboard();
         });
     </script>
 </body>
