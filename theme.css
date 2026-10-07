@@ -1,0 +1,42 @@
+/* theme.css - Global Quantum White Main Content Overrides */
+
+/* Change default background and text for the main body */
+body {
+    background-color: #f8fafc !important; /* bg-slate-50 */
+    color: #0f172a !important;         /* text-slate-900 */
+}
+
+/* Main content wrapper and cards */
+main, main .bg-slate-900 {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #e2e8f0 !important; /* border-slate-200 */
+}
+
+/* Cards and Containers inside Main */
+main .rounded-2xl, main .rounded-lg {
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+}
+
+/* Tables in Main */
+main table th {
+    background-color: #f8fafc !important;
+    color: #64748b !important; /* text-slate-500 */
+    border-bottom-color: #e2e8f0 !important;
+}
+
+main table td {
+    color: #334155 !important; /* text-slate-700 */
+    border-bottom-color: #f1f5f9 !important;
+}
+
+main tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+/* Protect the Sidebar so it stays dark */
+aside, aside * {
+    /* Tailwind slate-900/950 colors remain untouched inside the sidebar */
+}
