@@ -11,35 +11,85 @@
     <!-- Firebase App & Firestore SDKs (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- GLOBAL QUANTUM WHITE OVERRIDES (Keeps Sidebar Dark, Turns Main Screen Clean White) -->
+    <style>
+        body {
+            background-color: #f8fafc !important; /* bg-slate-50 */
+            color: #0f172a !important;         /* text-slate-900 */
+        }
+        main {
+            background-color: #f8fafc !important;
+        }
+        main header {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            border-bottom-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+        main header h1 {
+            color: #0f172a !important;
+        }
+        main header p {
+            color: #64748b !important;
+        }
+        /* Metrics & Content Cards */
+        main .bg-slate-900 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+        main .text-slate-400 {
+            color: #64748b !important;
+        }
+        main .text-slate-300, main .text-slate-200, main .text-white {
+            color: #0f172a !important;
+        }
+        /* Table Elements */
+        main table thead tr {
+            background-color: #f1f5f9 !important;
+            border-bottom-color: #e2e8f0 !important;
+        }
+        main table th {
+            color: #475569 !important;
+        }
+        main table tbody tr {
+            border-bottom-color: #f1f5f9 !important;
+        }
+        main table tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+        main input[type="text"] {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        main input[type="text"]::placeholder {
+            color: #94a3b8 !important;
+        }
+    </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex">
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+    <!-- Sidebar Navigation (Remains Fully Dark) -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex shrink-0">
         <div class="p-6">
             <div class="flex items-center space-x-3 mb-8">
                 <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg text-white">BP</div>
                 <span class="text-xl font-bold tracking-wide bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">BlinknPay</span>
             </div>
             <nav class="space-y-1">
-                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 bg-indigo-600/10 text-indigo-400 rounded-xl font-medium border border-indigo-500/20">
+                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 bg-indigo-600/10 text-indigo-400 rounded-xl font-medium border border-indigo-500/25">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                     <span>Overview</span>
                 </a>
-                <a href="merchant.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
+                <a href="merchant.html" class="flex items-center space-x-3 px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-xl transition">
                     <i data-lucide="store" class="w-5 h-5"></i>
                     <span>Merchants</span>
                 </a>
-
-
-           <a href="user.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
-              <i data-lucide="user-check" class="w-5 h-5"></i>
-                <span>Registered Users</span>
-            </a>
-
-
-
-                
+                <a href="user.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="user-check" class="w-5 h-5"></i>
+                    <span>Registered Users</span>
+                </a>
                 <a href="customer.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition">
                     <i data-lucide="users" class="w-5 h-5"></i>
                     <span>Users Sessions</span>
@@ -56,17 +106,14 @@
                     <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
                     <span>Analytics</span>
                 </a>
-                <!-- Link to Hardware Nodes Page -->
                 <a href="node.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
                     <i data-lucide="cpu" class="w-5 h-5"></i>
                     <span>Hardware Nodes</span>
                 </a>
-                <!-- Link to Disputes Page -->
                 <a href="disputes.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
                     <i data-lucide="alert-triangle" class="w-5 h-5"></i>
                     <span>Disputes</span>
                 </a>
-                <!-- Link to Settings Page -->
                 <a href="settings.html" class="flex items-center space-x-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-200 rounded-xl transition text-sm font-medium">
                     <i data-lucide="settings" class="w-5 h-5"></i>
                     <span>Settings</span>
@@ -75,9 +122,9 @@
         </div>
         <div class="p-6 border-t border-slate-800">
             <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-sm font-semibold">EM</div>
+                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-sm font-semibold text-slate-200">EM</div>
                 <div>
-                    <p class="text-sm font-medium">Admin Portal</p>
+                    <p class="text-sm font-medium text-slate-200">Admin Portal</p>
                     <p class="text-xs text-slate-500">Node Cluster Active</p>
                 </div>
             </div>
@@ -93,8 +140,8 @@
                 <p class="text-xs text-slate-400">Real-time telemetry for merchants, wallet liquidity, and proximity nodes</p>
             </div>
             <div class="flex items-center space-x-4">
-                <div class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <div class="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Firebase Sync Live</span>
                 </div>
             </div>
@@ -110,9 +157,9 @@
                             <p class="text-sm text-slate-400">Total Active Merchants</p>
                             <h3 class="text-3xl font-bold mt-2" id="metric-merchant-count">--</h3>
                         </div>
-                        <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl"><i data-lucide="store" class="w-6 h-6"></i></div>
+                        <div class="p-3 bg-indigo-500/10 text-indigo-600 rounded-xl"><i data-lucide="store" class="w-6 h-6"></i></div>
                     </div>
-                    <span class="text-xs text-emerald-400 font-medium mt-4 inline-block">Live Firestore Feed</span>
+                    <span class="text-xs text-emerald-600 font-medium mt-4 inline-block">Live Firestore Feed</span>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
                     <div class="flex justify-between items-start">
@@ -120,9 +167,9 @@
                             <p class="text-sm text-slate-400">Registered Customers</p>
                             <h3 class="text-3xl font-bold mt-2">24,590</h3>
                         </div>
-                        <div class="p-3 bg-cyan-500/10 text-cyan-400 rounded-xl"><i data-lucide="users" class="w-6 h-6"></i></div>
+                        <div class="p-3 bg-cyan-500/10 text-cyan-600 rounded-xl"><i data-lucide="users" class="w-6 h-6"></i></div>
                     </div>
-                    <span class="text-xs text-emerald-400 font-medium mt-4 inline-block">+18% growth rate</span>
+                    <span class="text-xs text-emerald-600 font-medium mt-4 inline-block">+18% growth rate</span>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
                     <div class="flex justify-between items-start">
@@ -130,9 +177,9 @@
                             <p class="text-sm text-slate-400">Aggregate Wallet Liquidity</p>
                             <h3 class="text-3xl font-bold mt-2" id="metric-total-liquidity">KES 0</h3>
                         </div>
-                        <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl"><i data-lucide="wallet" class="w-6 h-6"></i></div>
+                        <div class="p-3 bg-emerald-500/10 text-emerald-600 rounded-xl"><i data-lucide="wallet" class="w-6 h-6"></i></div>
                     </div>
-                    <span class="text-xs text-emerald-400 font-medium mt-4 inline-block">Sum across merchant nodes</span>
+                    <span class="text-xs text-emerald-600 font-medium mt-4 inline-block">Sum across merchant nodes</span>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
                     <div class="flex justify-between items-start">
@@ -140,21 +187,21 @@
                             <p class="text-sm text-slate-400">Active RPID Beacons</p>
                             <h3 class="text-3xl font-bold mt-2">914</h3>
                         </div>
-                        <div class="p-3 bg-amber-500/10 text-amber-400 rounded-xl"><i data-lucide="radio" class="w-6 h-6"></i></div>
+                        <div class="p-3 bg-amber-500/10 text-amber-600 rounded-xl"><i data-lucide="radio" class="w-6 h-6"></i></div>
                     </div>
-                    <span class="text-xs text-slate-400 font-medium mt-4 inline-block">Quad-channel operational</span>
+                    <span class="text-xs text-slate-500 font-medium mt-4 inline-block">Quad-channel operational</span>
                 </div>
             </div>
 
             <!-- Data Tables Section: Registered Merchants -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
                 <div class="p-6 border-b border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h3 class="text-lg font-bold">Registered Merchants Telemetry</h3>
                         <p class="text-xs text-slate-400">Live feed tracking merchant identifiers, coordinates, and real-time wallet amounts</p>
                     </div>
                     <div class="flex items-center space-x-3">
-                        <input type="text" id="merchant-search-input" placeholder="Search merchant name or ID..." class="bg-slate-950 border border-slate-800 text-sm rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500 text-slate-200 placeholder-slate-500 w-64">
+                        <input type="text" id="merchant-search-input" placeholder="Search merchant name or ID..." class="bg-slate-950 border border-slate-800 text-sm rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500 w-64">
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -168,9 +215,9 @@
                                 <th class="p-4 font-semibold text-right">Wallet Balance</th>
                             </tr>
                         </thead>
-                        <tbody id="merchant-table-body" class="divide-y divide-slate-800 text-sm">
+                        <tbody id="merchant-table-body" class="divide-y divide-slate-100 text-sm">
                             <tr>
-                                <td colspan="5" class="p-8 text-center text-slate-500">Connecting to Firebase Firestore...</td>
+                                <td colspan="5" class="p-8 text-center text-slate-400">Connecting to Firebase Firestore...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -181,7 +228,6 @@
 
     <!-- Firebase Connection & Real-Time Sync Script -->
     <script>
-        // Live Firebase Web Configuration Credentials
         const firebaseConfig = {
             apiKey: "AIzaSyBuUTCdsv83R8EgSSLUKTiWhCMpiJuRjto",
             authDomain: "blinknpay.firebaseapp.com",
@@ -200,18 +246,16 @@
 
         let allMerchantsData = [];
 
-        // Real-time listener for the 'merchants' collection
         db.collection("merchants").onSnapshot((snapshot) => {
             allMerchantsData = [];
             snapshot.forEach((doc) => {
                 allMerchantsData.push({ id: doc.id, ...doc.data() });
             });
 
-            // Sort merchants by date (newest first)
             allMerchantsData.sort((a, b) => {
                 const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || a.timestamp || 0);
                 const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || b.timestamp || 0);
-                return dateB - dateA; // Descending order (latest formed first)
+                return dateB - dateA;
             });
 
             renderMerchantTable(allMerchantsData);
@@ -219,7 +263,7 @@
         }, (error) => {
             console.error("Firestore sync error:", error);
             document.getElementById("merchant-table-body").innerHTML = `
-                <tr><td colspan="5" class="p-8 text-center text-rose-400">Failed to sync with Firebase. Check your project configuration rules.</td></tr>
+                <tr><td colspan="5" class="p-8 text-center text-rose-600">Failed to sync with Firebase. Check your project configuration rules.</td></tr>
             `;
         });
 
@@ -245,38 +289,37 @@
             let rowsHTML = "";
             
             if (dataArray.length === 0) {
-                rowsHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-500">No registered merchants found in Firestore.</td></tr>`;
+                rowsHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">No registered merchants found in Firestore.</td></tr>`;
             } else {
                 dataArray.forEach((data, index) => {
                     const displayName = data.businessName || data.name || 'Unnamed Merchant';
-                    const rowNumber = index + 1; // Sequential numbering starting from 1 for the newest
+                    const rowNumber = index + 1;
                     const identifierCode = data.merchantCode || data.identifier || data.terminalId || 'MER_NBI_0000';
                     const activeChannel = data.activeChannel || "Quad-Channel Engine";
                     const walletBalance = data.balance !== undefined ? data.balance : (data.walletBalance || 0);
 
-                    // Parse formation date for secondary info display if desired
                     let rawDate = data.createdAt?.toDate ? data.createdAt.toDate() : (data.createdAt ? new Date(data.createdAt) : null);
                     const formattedDate = rawDate && !isNaN(rawDate) ? rawDate.toLocaleDateString() : 'N/A';
                     
                     rowsHTML += `
-                        <tr class="hover:bg-slate-800/50 transition">
+                        <tr class="hover:bg-slate-50 transition">
                             <td class="p-4 font-medium flex items-center space-x-3">
-                                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center font-bold justify-center text-xs">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center font-bold justify-center text-xs border border-indigo-100">
                                     ${rowNumber}
                                 </div>
                                 <div>
-                                    <span class="text-white block">${displayName}</span>
-                                    <span class="text-[10px] text-slate-500">Formed: ${formattedDate}</span>
+                                    <span class="text-slate-900 block font-semibold">${displayName}</span>
+                                    <span class="text-[10px] text-slate-400">Formed: ${formattedDate}</span>
                                 </div>
                             </td>
-                            <td class="p-4 text-slate-400 font-mono text-xs">${identifierCode}</td>
-                            <td class="p-4 text-slate-300 font-mono text-xs">Lat: ${data.lat || '0.00'}, Lng: ${data.lng || '0.00'}</td>
+                            <td class="p-4 text-slate-600 font-mono text-xs">${identifierCode}</td>
+                            <td class="p-4 text-slate-600 font-mono text-xs">Lat: ${data.lat || '0.00'}, Lng: ${data.lng || '0.00'}</td>
                             <td class="p-4">
-                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-50 text-cyan-700 border border-cyan-200">
                                     ${activeChannel}
                                 </span>
                             </td>
-                            <td class="p-4 text-right font-mono font-semibold text-emerald-400">
+                            <td class="p-4 text-right font-mono font-semibold text-emerald-600">
                                 KES ${walletBalance.toLocaleString()}
                             </td>
                         </tr>
@@ -287,7 +330,6 @@
             document.getElementById("merchant-table-body").innerHTML = rowsHTML;
         }
 
-        // Live search filter input handler
         const searchInput = document.getElementById("merchant-search-input");
         if (searchInput) {
             searchInput.addEventListener("input", (e) => {
@@ -301,7 +343,6 @@
             });
         }
 
-        // Initialize Lucide icons after DOM content is loaded
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
         });
